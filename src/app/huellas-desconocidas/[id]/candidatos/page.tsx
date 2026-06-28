@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import { ConfirmarMatchForm } from "@/components/ConfirmarMatchForm";
 import { BackButton } from "@/components/BackButton";
 
@@ -70,8 +71,7 @@ export default function CandidatosHuellaDesconocidaPage() {
       {huellaUrl && (
         <div>
           <p className="text-sm text-neutral-400 mb-1">Huella escaneada</p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={huellaUrl} alt="Huella escaneada" className="rounded-lg w-32" />
+          <Image src={huellaUrl} alt="Huella escaneada" width={128} height={128} className="rounded-lg w-32 h-auto" />
         </div>
       )}
 
@@ -92,10 +92,11 @@ export default function CandidatosHuellaDesconocidaPage() {
             className="rounded-xl border border-neutral-700 p-4 flex flex-col gap-2"
           >
             <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={familiar.huella_url}
                 alt={`Huella de ${familiar.nombre_completo}`}
+                width={64}
+                height={64}
                 className="rounded-lg w-16 h-16 object-cover"
               />
               <div>

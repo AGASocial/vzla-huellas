@@ -127,8 +127,8 @@ export default function NuevoFamiliarPage() {
           />
         </Campo>
 
-        <Campo label="Número de teléfono">
-          <input name="telefono" required className={inputClass} />
+        <Campo label="Número de teléfono (opcional)">
+          <input name="telefono" className={inputClass} />
         </Campo>
 
         <Campo label="Dirección donde se encuentra">

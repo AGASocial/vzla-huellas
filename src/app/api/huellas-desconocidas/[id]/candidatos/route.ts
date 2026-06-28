@@ -46,11 +46,11 @@ export async function GET(
         matcher
       );
       if (!otroVector) continue;
-      const score = matcher.compareFeatures(huellaVector, otroVector);
+      const score = await matcher.compareFeatures(huellaVector, otroVector);
       candidatos.push({ familiar, score });
     }
   }
   candidatos.sort((a, b) => b.score - a.score);
 
-  return NextResponse.json({ huellaDesconocida, candidatos });
+  return NextResponse.json({ huellaDesconocida, candidatos: candidatos.slice(0, 20) });
 }

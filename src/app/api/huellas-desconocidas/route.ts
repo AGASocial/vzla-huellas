@@ -4,19 +4,33 @@ import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 
-export async function GET() {
+const PAGE_SIZE = 20;
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
+  const from = (page - 1) * PAGE_SIZE;
+  const to = from + PAGE_SIZE - 1;
+
   const supabase = createServerClient();
-  const { data, error } = await supabase
+  const { data, error, count } = await supabase
     .from("vzla_huellas_huellas_desconocidas")
-    .select("*")
+    .select("*", { count: "exact" })
     .is("match_confirmado_id", null)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ huellas: data });
+  return NextResponse.json({
+    huellas: data,
+    page,
+    pageSize: PAGE_SIZE,
+    total: count ?? 0,
+    totalPages: Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE)),
+  });
 }
 
 export async function POST(request: Request) {
@@ -33,7 +47,12 @@ export async function POST(request: Request) {
 
   const { error: uploadError } = await supabase.storage
     .from("vzla_huellas_desconocidas")
-    .upload(fileName, huellaBuffer, { contentType: huella.type });
+    .upload(fileName, huellaBuffer, {
+      contentType: huella.type,
+      // El nombre del archivo es único (UUID) y nunca se sobreescribe:
+      // se puede cachear como inmutable por un año sin riesgo.
+      cacheControl: "31536000, immutable",
+    });
 
   if (uploadError) {
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
@@ -73,7 +92,7 @@ export async function POST(request: Request) {
       matcher
     );
     if (!otroVector) continue;
-    const score = matcher.compareFeatures(huellaVector, otroVector);
+    const score = await matcher.compareFeatures(huellaVector, otroVector);
     candidatos.push({ familiar, score });
   }
   candidatos.sort((a, b) => b.score - a.score);

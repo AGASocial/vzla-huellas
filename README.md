@@ -3,9 +3,12 @@
 Herramienta humanitaria para ayudar a reencontrar familias en Venezuela
 mediante registro y comparación visual de huellas digitales.
 
-> **Importante:** la comparación de huellas usa similitud de imagen (no es un
-> sistema biométrico forense). Sirve como primer filtro orientativo para que
-> un humano valide. Ver banner de aviso en la app.
+> **Importante:** sin el microservicio `services/afis-matcher` configurado
+> (ver abajo), la comparación cae en similitud de imagen simple — que NO
+> distingue huellas de forma confiable (probado: dedos distintos dan
+> >88% de "similitud"). Configura `AFIS_SERVICE_URL` para matching real por
+> minucias. Aun con eso, todo match debe confirmarse con autoridades, Cruz
+> Roja u organismos forenses competentes antes de actuar.
 
 ## Setup
 
@@ -46,9 +49,28 @@ mediante registro y comparación visual de huellas digitales.
 - `/escanear` — captura de huella desconocida (cámara o subir imagen).
 - `/candidatos` — galería pública de huellas sin identificar.
 - `src/lib/matcher` — motor de comparación de huellas, intercambiable.
-  Actualmente usa similitud de imagen simple (`SimpleImageMatcher`). Para
-  enchufar un motor biométrico real (ej. SourceAFIS), implementa la interfaz
-  `FingerprintMatcher` y cámbiala en `src/lib/matcher/index.ts`.
+  `getMatcher()` usa `SourceAfisHttpMatcher` (matching real por minucias, vía
+  el microservicio en `services/afis-matcher`) si `AFIS_SERVICE_URL` está
+  configurada; si no, cae en `SimpleImageMatcher` (similitud de imagen, NO
+  confiable — ver advertencia arriba).
+- `services/afis-matcher` — microservicio Java standalone con
+  [SourceAFIS](https://sourceafis.machinezoo.com/), el motor real de
+  matching por minucias. Ver su propio `README.md` para correrlo en local o
+  desplegarlo (Fly.io o Render). Una vez desplegado, copia su URL pública a
+  `AFIS_SERVICE_URL` y el token a `AFIS_SERVICE_TOKEN` en las variables de
+  entorno del proyecto Next.js (local y en Vercel).
+
+  **Si ya tenías registros con `huella_vector` calculado por
+  `SimpleImageMatcher`** y ahora activas `AFIS_SERVICE_URL`, ese vector viejo
+  es incompatible con el nuevo formato. Corre esto una vez en el SQL Editor
+  para forzar el recálculo perezoso (`getOrComputeVector` ya lo hace
+  automáticamente la próxima vez que cada registro participe en una
+  comparación):
+
+  ```sql
+  update vzla_huellas_familiares_buscados set huella_vector = null;
+  update vzla_huellas_huellas_desconocidas set huella_vector = null;
+  ```
 
 ## Costos y escalabilidad
 

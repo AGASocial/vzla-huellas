@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import { BackButton } from "@/components/BackButton";
 
 type HuellaDesconocida = {
@@ -11,11 +13,25 @@ type HuellaDesconocida = {
 };
 
 export default function GaleriaHuellasPage() {
+  return (
+    <Suspense>
+      <GaleriaHuellas />
+    </Suspense>
+  );
+}
+
+function GaleriaHuellas() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
+
   const [huellas, setHuellas] = useState<HuellaDesconocida[] | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/huellas-desconocidas")
+    setHuellas(null);
+    fetch(`/api/huellas-desconocidas?page=${page}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -23,9 +39,14 @@ export default function GaleriaHuellasPage() {
           return;
         }
         setHuellas(data.huellas);
+        setTotalPages(data.totalPages);
       })
       .catch(() => setError("No se pudo cargar la galería."));
-  }, []);
+  }, [page]);
+
+  function goToPage(target: number) {
+    router.push(`/candidatos?page=${target}`);
+  }
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
@@ -47,18 +68,41 @@ export default function GaleriaHuellasPage() {
 
       <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {huellas?.map((huella) => (
-          <li key={huella.id}>
+          <li key={huella.id} className="relative aspect-square">
             <Link href={`/huellas-desconocidas/${huella.id}/candidatos`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={huella.huella_url}
                 alt="Huella sin identificar"
-                className="rounded-lg w-full h-24 object-cover border border-neutral-700"
+                fill
+                sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 16vw"
+                className="rounded-lg object-cover border border-neutral-700"
               />
             </Link>
           </li>
         ))}
       </ul>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4">
+          <button
+            disabled={page <= 1}
+            onClick={() => goToPage(page - 1)}
+            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm disabled:opacity-40 hover:border-neutral-500"
+          >
+            Anterior
+          </button>
+          <span className="text-sm text-neutral-400">
+            Página {page} de {totalPages}
+          </span>
+          <button
+            disabled={page >= totalPages}
+            onClick={() => goToPage(page + 1)}
+            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm disabled:opacity-40 hover:border-neutral-500"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </main>
   );
 }

@@ -17,26 +17,27 @@ function cosineSimilarity(a: number[], b: number[]): number {
 }
 
 /**
- * Comparación por similitud de imagen (NO es matching biométrico real).
- * Sirve como primer filtro orientativo para validación humana.
- *
- * El vector se extrae una sola vez por imagen (en el upload) y se guarda en
- * la base de datos. Comparar es aritmética pura sobre números ya guardados,
- * sin volver a descargar ni decodificar ninguna imagen.
+ * Comparación por similitud de imagen (NO es matching biométrico real — ver
+ * SourceAfisHttpMatcher para eso). Da scores altos entre dedos distintos
+ * porque toda foto de huella se ve "globalmente parecida" (mancha oscura
+ * ovalada sobre papel claro). Útil solo como filtro de emergencia mientras
+ * no haya un motor real configurado.
  */
 export class SimpleImageMatcher implements FingerprintMatcher {
-  async extractFeatures(imageBuffer: Buffer): Promise<number[]> {
+  async extractFeatures(imageBuffer: Buffer): Promise<string> {
     const { data } = await sharp(imageBuffer)
       .resize(SIZE, SIZE, { fit: "fill" })
       .grayscale()
       .normalize()
       .raw()
       .toBuffer({ resolveWithObject: true });
-    return Array.from(data);
+    return JSON.stringify(Array.from(data));
   }
 
-  compareFeatures(featuresA: number[], featuresB: number[]): number {
-    const similarity = cosineSimilarity(featuresA, featuresB);
+  async compareFeatures(featuresA: string, featuresB: string): Promise<number> {
+    const vecA: number[] = JSON.parse(featuresA);
+    const vecB: number[] = JSON.parse(featuresB);
+    const similarity = cosineSimilarity(vecA, vecB);
     const score = Math.max(0, Math.min(1, similarity)) * 100;
     return Math.round(score * 10) / 10;
   }

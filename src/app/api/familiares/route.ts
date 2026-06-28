@@ -25,7 +25,6 @@ export async function POST(request: Request) {
     !nombre_completo ||
     !tipo_documento ||
     (tipo_documento !== "sin_documento" && !numero_documento) ||
-    !telefono ||
     !direccion ||
     !correo ||
     !nombre_familiar ||
@@ -48,7 +47,7 @@ export async function POST(request: Request) {
   }
 
   const telefonoPattern = /^[0-9+\-\s]{7,20}$/;
-  if (!telefonoPattern.test(telefono)) {
+  if (telefono && !telefonoPattern.test(telefono)) {
     return NextResponse.json({ error: "El teléfono no tiene un formato válido" }, { status: 400 });
   }
   if (!telefonoPattern.test(telefono_familiar)) {
@@ -69,7 +68,12 @@ export async function POST(request: Request) {
 
   const { error: uploadError } = await supabase.storage
     .from("vzla_huellas_familiares")
-    .upload(fileName, huellaBuffer, { contentType: huella.type });
+    .upload(fileName, huellaBuffer, {
+      contentType: huella.type,
+      // El nombre del archivo es único (UUID) y nunca se sobreescribe:
+      // se puede cachear como inmutable por un año sin riesgo.
+      cacheControl: "31536000, immutable",
+    });
 
   if (uploadError) {
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
@@ -121,7 +125,7 @@ export async function POST(request: Request) {
       matcher
     );
     if (!otroVector) continue;
-    const score = matcher.compareFeatures(huellaVector, otroVector);
+    const score = await matcher.compareFeatures(huellaVector, otroVector);
     candidatos.push({ huellaDesconocida, score });
   }
   candidatos.sort((a, b) => b.score - a.score);
