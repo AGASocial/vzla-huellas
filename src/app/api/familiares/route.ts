@@ -4,23 +4,23 @@ import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
+import { parseMultipart } from "@/lib/parse-multipart";
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
-  const huella = formData.get("huella") as File | null;
+  const { fields, file } = await parseMultipart(request);
 
-  if (!huella) {
+  if (!file) {
     return NextResponse.json({ error: "Falta la imagen de la huella" }, { status: 400 });
   }
 
-  const nombre_completo = String(formData.get("nombre_completo") ?? "");
-  const tipo_documento = String(formData.get("tipo_documento") ?? "");
-  const numero_documento = String(formData.get("numero_documento") ?? "");
-  const telefono = String(formData.get("telefono") ?? "");
-  const direccion = String(formData.get("direccion") ?? "");
-  const correo = String(formData.get("correo") ?? "");
-  const nombre_familiar = String(formData.get("nombre_familiar") ?? "");
-  const telefono_familiar = String(formData.get("telefono_familiar") ?? "");
+  const nombre_completo = String(fields.nombre_completo ?? "");
+  const tipo_documento = String(fields.tipo_documento ?? "");
+  const numero_documento = String(fields.numero_documento ?? "");
+  const telefono = String(fields.telefono ?? "");
+  const direccion = String(fields.direccion ?? "");
+  const correo = String(fields.correo ?? "");
+  const nombre_familiar = String(fields.nombre_familiar ?? "");
+  const telefono_familiar = String(fields.telefono_familiar ?? "");
 
   if (
     !nombre_completo ||
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
   let huellaBuffer: Buffer;
   try {
-    huellaBuffer = await normalizeToJpeg(Buffer.from(await huella.arrayBuffer()));
+    huellaBuffer = await normalizeToJpeg(file.buffer);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "No se pudo procesar la imagen" },

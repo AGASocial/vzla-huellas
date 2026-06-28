@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { APP_VERSION } from "@/lib/version";
+import { APP_VERSION, APP_COMMIT_SHA } from "@/lib/version";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -38,7 +38,21 @@ export default function RootLayout({
             Toda coincidencia debe confirmarse con autoridades, Cruz Roja u
             organismos forenses competentes.
           </p>
-          <p className="text-amber-200/60 text-xs mt-2">Versión {APP_VERSION}</p>
+          <p className="text-amber-200/60 text-xs mt-2">
+            Versión{" "}
+            {APP_COMMIT_SHA ? (
+              <a
+                href={`https://github.com/AGASocial/vzla-huellas/commit/${APP_COMMIT_SHA}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-amber-200"
+              >
+                {APP_VERSION}
+              </a>
+            ) : (
+              APP_VERSION
+            )}
+          </p>
         </footer>
       </body>
     </html>

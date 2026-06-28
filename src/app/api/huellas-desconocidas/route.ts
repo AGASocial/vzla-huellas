@@ -4,6 +4,7 @@ import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
+import { parseMultipart } from "@/lib/parse-multipart";
 
 const PAGE_SIZE = 20;
 
@@ -35,15 +36,14 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
-  const huella = formData.get("huella") as File | null;
-  const observaciones = String(formData.get("observaciones") ?? "").trim();
-  const direccion = String(formData.get("direccion") ?? "").trim();
-  const estado = String(formData.get("estado") ?? "").trim();
-  const latitudRaw = formData.get("latitud");
-  const longitudRaw = formData.get("longitud");
+  const { fields, file } = await parseMultipart(request);
+  const observaciones = String(fields.observaciones ?? "").trim();
+  const direccion = String(fields.direccion ?? "").trim();
+  const estado = String(fields.estado ?? "").trim();
+  const latitudRaw = fields.latitud;
+  const longitudRaw = fields.longitud;
 
-  if (!huella) {
+  if (!file) {
     return NextResponse.json({ error: "Falta la imagen de la huella" }, { status: 400 });
   }
 
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
 
   let huellaBuffer: Buffer;
   try {
-    huellaBuffer = await normalizeToJpeg(Buffer.from(await huella.arrayBuffer()));
+    huellaBuffer = await normalizeToJpeg(file.buffer);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "No se pudo procesar la imagen" },
