@@ -36,7 +36,7 @@ export default function RootLayout({
         <footer className="w-full mx-auto px-4 sm:px-8 py-6 text-center bg-[var(--oscuro)]">
           <p className="text-[var(--amarillo)] text-xs">
             <strong>Aviso importante:</strong> esta herramienta usa
-            comparación de imágenes de huellas por similitud visual y sirve
+            comparación de imágenes de huellas digitales por similitud visual y sirve
             como <strong>primer filtro orientativo</strong>, no es un sistema
             biométrico forense certificado. Toda coincidencia debe
             confirmarse con autoridades, Cruz Roja u organismos forenses

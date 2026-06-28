@@ -71,7 +71,7 @@ export default function CandidatosFamiliarPage() {
           <h1 className="text-2xl font-display">Registro guardado</h1>
         </div>
         <p className="text-[var(--gris)] text-sm">
-          Estas son las huellas desconocidas registradas hasta ahora. Compara
+          Estas son las huellas digitales registradas hasta ahora. Compara
           visualmente con la huella de {nombre ?? "tu familiar"}.
         </p>
       </div>
@@ -89,7 +89,7 @@ export default function CandidatosFamiliarPage() {
 
       {candidatos !== null && candidatos.length === 0 && (
         <p className="text-[var(--gris)]">
-          No hay huellas desconocidas registradas todavía. Si alguien escanea
+          No hay huellas digitales registradas todavía. Si alguien escanea
           una huella en el futuro, se comparará automáticamente con este
           registro.
         </p>

@@ -6,7 +6,7 @@ export default function Home() {
       <header className="flex flex-col gap-1 bg-[var(--oscuro)] text-white -mx-4 sm:-mx-8 -mt-6 sm:-mt-10 px-4 sm:px-8 py-6 sm:py-10 mb-2">
         <h1 className="text-3xl font-display">Reencuentro</h1>
         <p className="text-[var(--amarillo)] text-sm">
-          Registro y comparación de huellas — Venezuela
+          Registro y comparación de huellas digitales — Venezuela
         </p>
       </header>
 
@@ -26,7 +26,7 @@ export default function Home() {
           href="/escanear"
           className="rounded-xl bg-[var(--rojo)] hover:bg-[var(--rojo)]/90 text-white transition-colors p-6 flex flex-col gap-1 shadow-[0_4px_20px_rgba(207,20,43,0.35)]"
         >
-          <span className="text-lg font-display">Escanear huellas</span>
+          <span className="text-lg font-display">Escanear huellas digitales</span>
           <span className="text-white/80 text-sm">
             Toma o sube la huella de una persona desaparecida o fallecida para
             buscar coincidencias.

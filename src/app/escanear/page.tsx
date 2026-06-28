@@ -128,7 +128,7 @@ export default function EscanearPage() {
     <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10">
       <div className="flex items-center gap-3 mb-1">
         <BackButton />
-        <h1 className="text-2xl font-display">Escanear huellas</h1>
+        <h1 className="text-2xl font-display">Escanear huellas digitales</h1>
       </div>
       <p className="text-[var(--gris)] text-sm mb-6">
         Toma o sube la huella de una persona desaparecida o fallecida para

@@ -1,7 +1,7 @@
 import type { FingerprintMatcher } from "./types";
 
 /**
- * Matching real de huellas por minucias, vía el microservicio Java en
+ * Matching real de huellas digitales por minucias, vía el microservicio Java en
  * services/afis-matcher (SourceAFIS). El score de SourceAFIS no es un
  * porcentaje: es un valor abierto donde >= 40 sugiere la misma huella. Para
  * no romper el resto del UI (que muestra/ordena por "score 0-100"), lo
