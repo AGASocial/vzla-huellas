@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
+import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -20,8 +21,46 @@ export async function POST(request: Request) {
   const nombre_familiar = String(formData.get("nombre_familiar") ?? "");
   const telefono_familiar = String(formData.get("telefono_familiar") ?? "");
 
-  if (!nombre_completo || !tipo_documento || !nombre_familiar || !telefono_familiar) {
+  if (
+    !nombre_completo ||
+    !tipo_documento ||
+    (tipo_documento !== "sin_documento" && !numero_documento) ||
+    !telefono ||
+    !direccion ||
+    !correo ||
+    !nombre_familiar ||
+    !telefono_familiar
+  ) {
     return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
+  }
+
+  const numeroDocumentoPatterns: Record<string, RegExp> = {
+    V: /^[0-9]{1,8}$/,
+    E: /^[0-9]{1,8}$/,
+    pasaporte: /^[A-Za-z0-9]{1,9}$/,
+  };
+  const numeroDocumentoPattern = numeroDocumentoPatterns[tipo_documento];
+  if (numeroDocumentoPattern && !numeroDocumentoPattern.test(numero_documento)) {
+    return NextResponse.json(
+      { error: "El número de documento no tiene un formato válido" },
+      { status: 400 }
+    );
+  }
+
+  const telefonoPattern = /^[0-9+\-\s]{7,20}$/;
+  if (!telefonoPattern.test(telefono)) {
+    return NextResponse.json({ error: "El teléfono no tiene un formato válido" }, { status: 400 });
+  }
+  if (!telefonoPattern.test(telefono_familiar)) {
+    return NextResponse.json(
+      { error: "El teléfono del familiar no tiene un formato válido" },
+      { status: 400 }
+    );
+  }
+
+  const correoPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  if (!correoPattern.test(correo)) {
+    return NextResponse.json({ error: "El correo no tiene un formato válido" }, { status: 400 });
   }
 
   const supabase = createServerClient();
@@ -40,6 +79,9 @@ export async function POST(request: Request) {
     .from("vzla_huellas_familiares")
     .getPublicUrl(fileName);
 
+  const matcher = getMatcher();
+  const huellaVector = await matcher.extractFeatures(huellaBuffer);
+
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_familiares_buscados")
     .insert({
@@ -52,6 +94,7 @@ export async function POST(request: Request) {
       nombre_familiar,
       telefono_familiar,
       huella_url: publicUrlData.publicUrl,
+      huella_vector: huellaVector,
     })
     .select()
     .single();
@@ -69,17 +112,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ familiar: inserted, candidatos: [] });
   }
 
-  const matcher = getMatcher();
   const candidatos = [];
   for (const huellaDesconocida of huellasDesconocidas ?? []) {
-    try {
-      const response = await fetch(huellaDesconocida.huella_url);
-      const otraBuffer = Buffer.from(await response.arrayBuffer());
-      const score = await matcher.compare(huellaBuffer, otraBuffer);
-      candidatos.push({ huellaDesconocida, score });
-    } catch {
-      continue;
-    }
+    const otroVector = await getOrComputeVector(
+      supabase,
+      "vzla_huellas_huellas_desconocidas",
+      huellaDesconocida,
+      matcher
+    );
+    if (!otroVector) continue;
+    const score = matcher.compareFeatures(huellaVector, otroVector);
+    candidatos.push({ huellaDesconocida, score });
   }
   candidatos.sort((a, b) => b.score - a.score);
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
+import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 
 export async function GET() {
   const supabase = createServerClient();
@@ -42,9 +43,12 @@ export async function POST(request: Request) {
     .from("vzla_huellas_desconocidas")
     .getPublicUrl(fileName);
 
+  const matcher = getMatcher();
+  const huellaVector = await matcher.extractFeatures(huellaBuffer);
+
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_huellas_desconocidas")
-    .insert({ huella_url: publicUrlData.publicUrl })
+    .insert({ huella_url: publicUrlData.publicUrl, huella_vector: huellaVector })
     .select()
     .single();
 
@@ -60,17 +64,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ huellaDesconocida: inserted, candidatos: [] });
   }
 
-  const matcher = getMatcher();
   const candidatos = [];
   for (const familiar of familiares ?? []) {
-    try {
-      const response = await fetch(familiar.huella_url);
-      const otraBuffer = Buffer.from(await response.arrayBuffer());
-      const score = await matcher.compare(huellaBuffer, otraBuffer);
-      candidatos.push({ familiar, score });
-    } catch {
-      continue;
-    }
+    const otroVector = await getOrComputeVector(
+      supabase,
+      "vzla_huellas_familiares_buscados",
+      familiar,
+      matcher
+    );
+    if (!otroVector) continue;
+    const score = matcher.compareFeatures(huellaVector, otroVector);
+    candidatos.push({ familiar, score });
   }
   candidatos.sort((a, b) => b.score - a.score);
 

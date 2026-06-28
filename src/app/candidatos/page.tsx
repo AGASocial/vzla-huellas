@@ -28,7 +28,7 @@ export default function GaleriaHuellasPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
+    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <BackButton />
       <div>
         <h1 className="text-2xl font-bold mb-1">Huellas sin identificar</h1>

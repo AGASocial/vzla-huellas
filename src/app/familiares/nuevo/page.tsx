@@ -5,10 +5,47 @@ import { useState } from "react";
 import Image from "next/image";
 import { BackButton } from "@/components/BackButton";
 
+type TipoDocumento = "" | "V" | "E" | "pasaporte" | "sin_documento";
+
+const NUMERO_DOCUMENTO_CONFIG: Record<
+  TipoDocumento,
+  { placeholder: string; maxLength?: number; pattern?: string; inputMode?: "numeric" | "text" }
+> = {
+  "": { placeholder: "Selecciona primero el tipo de documento" },
+  V: { placeholder: "Ej: 12345678", maxLength: 8, pattern: "[0-9]{1,8}", inputMode: "numeric" },
+  E: { placeholder: "Ej: 12345678", maxLength: 8, pattern: "[0-9]{1,8}", inputMode: "numeric" },
+  pasaporte: {
+    placeholder: "Ej: A1234567",
+    maxLength: 9,
+    pattern: "[A-Za-z0-9]{1,9}",
+    inputMode: "text",
+  },
+  sin_documento: { placeholder: "Sin número de documento" },
+};
+
 export default function NuevoFamiliarPage() {
   const router = useRouter();
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [tipoDocumento, setTipoDocumento] = useState<TipoDocumento>("");
+  const [numeroDocumento, setNumeroDocumento] = useState("");
+
+  const numeroDocumentoConfig = NUMERO_DOCUMENTO_CONFIG[tipoDocumento];
+
+  function handleTipoDocumentoChange(value: TipoDocumento) {
+    setTipoDocumento(value);
+    setNumeroDocumento("");
+  }
+
+  function handleNumeroDocumentoChange(value: string) {
+    if (tipoDocumento === "pasaporte") {
+      setNumeroDocumento(value.toUpperCase());
+    } else if (tipoDocumento === "V" || tipoDocumento === "E") {
+      setNumeroDocumento(value.replace(/\D/g, ""));
+    } else {
+      setNumeroDocumento(value);
+    }
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,7 +79,7 @@ export default function NuevoFamiliarPage() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
+    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
       <BackButton />
       <h1 className="text-2xl font-bold mb-1">Sube los datos de tu familiar</h1>
       <p className="text-neutral-400 text-sm mb-6">
@@ -56,7 +93,15 @@ export default function NuevoFamiliarPage() {
         </Campo>
 
         <Campo label="Tipo de documento">
-          <select name="tipo_documento" required className={inputClass} defaultValue="">
+          <select
+            name="tipo_documento"
+            required
+            className={inputClass}
+            value={tipoDocumento}
+            onChange={(event) =>
+              handleTipoDocumentoChange(event.target.value as TipoDocumento)
+            }
+          >
             <option value="" disabled>
               Selecciona...
             </option>
@@ -67,20 +112,31 @@ export default function NuevoFamiliarPage() {
           </select>
         </Campo>
 
-        <Campo label="Número de documento (opcional)">
-          <input name="numero_documento" className={inputClass} />
+        <Campo label="Número de documento">
+          <input
+            name="numero_documento"
+            value={numeroDocumento}
+            onChange={(event) => handleNumeroDocumentoChange(event.target.value)}
+            disabled={!tipoDocumento || tipoDocumento === "sin_documento"}
+            required={tipoDocumento !== "sin_documento"}
+            placeholder={numeroDocumentoConfig.placeholder}
+            maxLength={numeroDocumentoConfig.maxLength}
+            pattern={numeroDocumentoConfig.pattern}
+            inputMode={numeroDocumentoConfig.inputMode}
+            className={`${inputClass} disabled:opacity-50`}
+          />
         </Campo>
 
-        <Campo label="Número de teléfono (opcional)">
-          <input name="telefono" className={inputClass} />
+        <Campo label="Número de teléfono">
+          <input name="telefono" required className={inputClass} />
         </Campo>
 
-        <Campo label="Dirección donde se encuentra (opcional)">
-          <input name="direccion" className={inputClass} />
+        <Campo label="Dirección donde se encuentra">
+          <input name="direccion" required className={inputClass} />
         </Campo>
 
-        <Campo label="Correo electrónico (opcional)">
-          <input name="correo" type="email" className={inputClass} />
+        <Campo label="Correo electrónico">
+          <input name="correo" type="email" required className={inputClass} />
         </Campo>
 
         <Campo label="Nombre del familiar que lo busca">

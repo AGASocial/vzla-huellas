@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
+import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 
 export async function GET(
   _request: Request,
@@ -28,18 +29,25 @@ export async function GET(
   }
 
   const matcher = getMatcher();
-  const huellaResponse = await fetch(huellaDesconocida.huella_url);
-  const huellaBuffer = Buffer.from(await huellaResponse.arrayBuffer());
+  const huellaVector = await getOrComputeVector(
+    supabase,
+    "vzla_huellas_huellas_desconocidas",
+    huellaDesconocida,
+    matcher
+  );
 
   const candidatos = [];
-  for (const familiar of familiares ?? []) {
-    try {
-      const response = await fetch(familiar.huella_url);
-      const otraBuffer = Buffer.from(await response.arrayBuffer());
-      const score = await matcher.compare(huellaBuffer, otraBuffer);
+  if (huellaVector) {
+    for (const familiar of familiares ?? []) {
+      const otroVector = await getOrComputeVector(
+        supabase,
+        "vzla_huellas_familiares_buscados",
+        familiar,
+        matcher
+      );
+      if (!otroVector) continue;
+      const score = matcher.compareFeatures(huellaVector, otroVector);
       candidatos.push({ familiar, score });
-    } catch {
-      continue;
     }
   }
   candidatos.sort((a, b) => b.score - a.score);
