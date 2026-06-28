@@ -5,6 +5,7 @@ import { getMatcher } from "@/lib/matcher";
 import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
 import { parseMultipart } from "@/lib/parse-multipart";
+import { uploadToStorage } from "@/lib/storage-upload";
 
 export async function POST(request: Request) {
   const { fields, file } = await parseMultipart(request);
@@ -76,22 +77,16 @@ export async function POST(request: Request) {
   }
   const fileName = `${randomUUID()}.jpg`;
 
-  const { error: uploadError } = await supabase.storage
-    .from("vzla_huellas_familiares")
-    .upload(fileName, huellaBuffer, {
-      contentType: "image/jpeg",
-      // El nombre del archivo es único (UUID) y nunca se sobreescribe:
-      // se puede cachear como inmutable por un año sin riesgo.
-      cacheControl: "31536000, immutable",
-    });
-
-  if (uploadError) {
-    return NextResponse.json({ error: uploadError.message }, { status: 500 });
+  const uploadResult = await uploadToStorage(
+    "vzla_huellas_familiares",
+    fileName,
+    huellaBuffer,
+    "image/jpeg"
+  );
+  if ("error" in uploadResult) {
+    return NextResponse.json({ error: uploadResult.error }, { status: 500 });
   }
-
-  const { data: publicUrlData } = supabase.storage
-    .from("vzla_huellas_familiares")
-    .getPublicUrl(fileName);
+  const publicUrlData = uploadResult;
 
   const matcher = getMatcher();
   let huellaVector: string;
