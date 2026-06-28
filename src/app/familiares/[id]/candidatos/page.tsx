@@ -22,6 +22,7 @@ export default function CandidatosFamiliarPage() {
   const params = useParams<{ id: string }>();
   const [huellaUrl, setHuellaUrl] = useState<string | null>(null);
   const [nombre, setNombre] = useState<string | null>(null);
+  const [numeroDocumento, setNumeroDocumento] = useState<string | null>(null);
   const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
   const [abierto, setAbierto] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState<{
@@ -40,6 +41,7 @@ export default function CandidatosFamiliarPage() {
         }
         setHuellaUrl(data.familiar.huella_url);
         setNombre(data.familiar.nombre_completo);
+        setNumeroDocumento(data.familiar.numero_documento);
         setCandidatos(data.candidatos);
       })
       .catch(() => setError("No se pudo cargar la información."));
@@ -75,6 +77,21 @@ export default function CandidatosFamiliarPage() {
           visualmente con la huella de {nombre ?? "tu familiar"}.
         </p>
       </div>
+
+      {nombre && (
+        <div className="rounded-lg bg-white border border-[var(--gris-claro)] p-3">
+          <p className="text-sm text-[var(--gris)]">Buscando a</p>
+          <p className="font-semibold">
+            {nombre}
+            {numeroDocumento && numeroDocumento.length >= 4 && (
+              <span className="text-[var(--gris)] font-normal">
+                {" "}
+                — doc. terminado en {numeroDocumento.slice(-4)}
+              </span>
+            )}
+          </p>
+        </div>
+      )}
 
       {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
 
