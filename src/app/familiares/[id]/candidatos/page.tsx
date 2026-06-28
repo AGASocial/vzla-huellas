@@ -47,6 +47,8 @@ export default function CandidatosFamiliarPage() {
       .catch(() => setError("No se pudo cargar la información."));
   }, [params.id]);
 
+  const candidatosVisibles = (candidatos ?? []).filter(({ score }) => score > 1);
+
   if (confirmado) {
     return (
       <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
@@ -104,7 +106,7 @@ export default function CandidatosFamiliarPage() {
 
       {candidatos === null && !error && <p className="text-[var(--gris)]">Buscando coincidencias...</p>}
 
-      {candidatos !== null && candidatos.length === 0 && (
+      {candidatos !== null && candidatosVisibles.length === 0 && (
         <p className="text-[var(--gris)]">
           No hay huellas digitales registradas todavía. Si alguien escanea
           una huella en el futuro, se comparará automáticamente con este
@@ -113,7 +115,7 @@ export default function CandidatosFamiliarPage() {
       )}
 
       <ul className="flex flex-col gap-4">
-        {candidatos?.map(({ huellaDesconocida, score }) => (
+        {candidatosVisibles.map(({ huellaDesconocida, score }) => (
           <li
             key={huellaDesconocida.id}
             className="rounded-xl bg-white border border-[var(--gris-claro)] p-4 flex flex-col gap-2"
