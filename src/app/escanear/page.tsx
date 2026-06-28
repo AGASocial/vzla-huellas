@@ -125,29 +125,33 @@ export default function EscanearPage() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10">
-      <BackButton />
-      <h1 className="text-2xl font-bold mb-1">Escanear huellas</h1>
-      <p className="text-neutral-400 text-sm mb-6">
+    <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10">
+      <div className="flex items-center gap-3 mb-1">
+        <BackButton />
+        <h1 className="text-2xl font-display">Escanear huellas</h1>
+      </div>
+      <p className="text-[var(--gris)] text-sm mb-6">
         Toma o sube la huella de una persona desaparecida o fallecida para
         buscar coincidencias. Puedes subir la foto primero y completar los
         detalles después.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-3 items-start bg-amber-950/40 border border-amber-700/50 rounded-lg p-3 mb-6">
-        <Image
-          src="/huella_ejemplo.jpeg"
-          alt="Ejemplo de cómo debe verse la foto de la huella"
-          width={120}
-          height={150}
-          className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
-        />
-        <p className="text-amber-200 text-sm">
-          Usa el <strong>dedo pulgar derecho</strong> de la persona
-          desconocida si es posible. Toma la foto bien enfocada y con buena
-          luz, como en el ejemplo.
-        </p>
-      </div>
+      {!previewUrl && (
+        <div className="flex flex-col sm:flex-row gap-3 items-start bg-[#FFF9F0] border border-[var(--amarillo)]/40 rounded-lg p-3 mb-6">
+          <Image
+            src="/huella_ejemplo.jpeg"
+            alt="Ejemplo de cómo debe verse la foto de la huella"
+            width={120}
+            height={150}
+            className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
+          />
+          <p className="text-[#7a4f00] text-sm">
+            Usa el <strong>dedo pulgar derecho</strong> de la persona
+            desconocida si es posible. Toma la foto bien enfocada y con buena
+            luz, como en el ejemplo.
+          </p>
+        </div>
+      )}
 
       {previewUrl ? (
         <div className="flex items-center gap-4 mb-6">
@@ -157,22 +161,22 @@ export default function EscanearPage() {
             width={96}
             height={96}
             unoptimized
-            className="rounded-lg w-24 h-24 object-cover border border-teal-700"
+            className="rounded-lg w-24 h-24 object-cover border border-[var(--verde-ok)]"
           />
           <div className="flex flex-col gap-2">
-            <p className="text-teal-300 text-sm">Huella lista para guardar.</p>
+            <p className="text-[var(--verde-ok)] text-sm">Huella lista para guardar.</p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
-                className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm hover:border-neutral-500"
+                className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-sm hover:border-[var(--oscuro)]/40"
               >
                 Tomar otra foto
               </button>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm hover:border-neutral-500"
+                className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-sm hover:border-[var(--oscuro)]/40"
               >
                 Subir otra imagen
               </button>
@@ -184,20 +188,20 @@ export default function EscanearPage() {
           <button
             type="button"
             onClick={() => cameraInputRef.current?.click()}
-            className="flex-1 rounded-xl bg-teal-900/60 hover:bg-teal-900 transition-colors p-5 text-left"
+            className="flex-1 rounded-xl bg-[var(--rojo)] hover:bg-[var(--rojo)]/90 text-white transition-colors p-5 text-left shadow-[0_4px_15px_rgba(207,20,43,0.3)]"
           >
-            <span className="text-lg font-semibold block">Tomar huella con el teléfono</span>
-            <span className="text-neutral-300 text-sm">
+            <span className="text-lg font-display block">Tomar huella con el teléfono</span>
+            <span className="text-white/80 text-sm">
               Usa la cámara para fotografiar la huella de la persona desconocida.
             </span>
           </button>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 rounded-xl border border-neutral-700 hover:border-neutral-500 transition-colors p-5 text-left"
+            className="flex-1 rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
           >
             <span className="text-lg font-semibold block">Subir imagen de la huella</span>
-            <span className="text-neutral-300 text-sm">
+            <span className="text-[var(--gris)] text-sm">
               Selecciona una foto o escaneo existente.
             </span>
           </button>
@@ -220,17 +224,17 @@ export default function EscanearPage() {
       />
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <label className="sm:col-span-2 flex flex-col gap-1 text-sm text-neutral-300">
+        <label className="sm:col-span-2 flex flex-col gap-1 text-sm text-[var(--gris)]">
           Dirección donde se encuentra (opcional)
           <input
             value={direccion}
             onChange={(event) => setDireccion(event.target.value)}
             disabled={enviando}
-            className="rounded-lg bg-neutral-900 border border-neutral-700 px-3 py-2 text-white focus:outline-none focus:border-teal-500 disabled:opacity-50"
+            className="rounded-lg bg-white border border-[var(--gris-claro)] px-3 py-2 text-[var(--oscuro)] focus:outline-none focus:border-[var(--azul)] disabled:opacity-50"
           />
         </label>
 
-        <fieldset className="sm:col-span-2 flex flex-col gap-2 text-sm text-neutral-300">
+        <fieldset className="sm:col-span-2 flex flex-col gap-2 text-sm text-[var(--gris)]">
           Estado de la persona (opcional)
           <div className="grid grid-cols-2 gap-3">
             <button
@@ -239,8 +243,8 @@ export default function EscanearPage() {
               onClick={() => setEstado(estado === "con_vida" ? "" : "con_vida")}
               className={`rounded-xl p-5 text-left transition-colors disabled:opacity-50 ${
                 estado === "con_vida"
-                  ? "bg-teal-900/60 border border-teal-500"
-                  : "border border-neutral-700 hover:border-neutral-500"
+                  ? "bg-[var(--verde-ok)]/10 border border-[var(--verde-ok)] text-[var(--verde-ok)]"
+                  : "bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 text-[var(--oscuro)]"
               }`}
             >
               <span className="text-lg font-semibold block">Con vida</span>
@@ -251,8 +255,8 @@ export default function EscanearPage() {
               onClick={() => setEstado(estado === "fallecido" ? "" : "fallecido")}
               className={`rounded-xl p-5 text-left transition-colors disabled:opacity-50 ${
                 estado === "fallecido"
-                  ? "bg-teal-900/60 border border-teal-500"
-                  : "border border-neutral-700 hover:border-neutral-500"
+                  ? "bg-[var(--rojo)]/10 border border-[var(--rojo)] text-[var(--rojo)]"
+                  : "bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 text-[var(--oscuro)]"
               }`}
             >
               <span className="text-lg font-semibold block">Fallecido</span>
@@ -260,7 +264,7 @@ export default function EscanearPage() {
           </div>
         </fieldset>
 
-        <label className="sm:col-span-2 flex flex-col gap-1 text-sm text-neutral-300">
+        <label className="sm:col-span-2 flex flex-col gap-1 text-sm text-[var(--gris)]">
           Observaciones (opcional)
           <textarea
             value={observaciones}
@@ -268,16 +272,16 @@ export default function EscanearPage() {
             disabled={enviando}
             rows={3}
             placeholder="Ej: lugar exacto, estado del cuerpo, señas particulares..."
-            className="rounded-lg bg-neutral-900 border border-neutral-700 px-3 py-2 text-white focus:outline-none focus:border-teal-500 disabled:opacity-50"
+            className="rounded-lg bg-white border border-[var(--gris-claro)] px-3 py-2 text-[var(--oscuro)] focus:outline-none focus:border-[var(--azul)] disabled:opacity-50"
           />
         </label>
 
-        {error && <p className="sm:col-span-2 text-red-400 text-sm">{error}</p>}
+        {error && <p className="sm:col-span-2 text-[var(--rojo)] text-sm">{error}</p>}
 
         <button
           type="submit"
           disabled={enviando}
-          className="sm:col-span-2 mt-2 rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-50 py-3 font-semibold"
+          className="sm:col-span-2 mt-2 rounded-lg bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 text-white disabled:opacity-50 py-3 font-display shadow-[0_4px_15px_rgba(26,138,90,0.3)]"
         >
           {enviando ? "Guardando..." : "Guardar"}
         </button>

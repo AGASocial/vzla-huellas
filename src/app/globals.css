@@ -1,7 +1,25 @@
 @import "tailwindcss";
 
-/* La app es siempre oscura (no sigue el modo claro/oscuro del sistema) — el
-   color de fondo real lo da la clase bg-neutral-950 en <body> (layout.tsx). */
+/* Paleta Venezuela — usada vía arbitrary values de Tailwind, ej. bg-[var(--azul)].
+   El color de fondo real lo da la clase bg-[var(--fondo)] en <body> (layout.tsx). */
+:root {
+  --rojo: #cf142b;
+  --azul: #00247d;
+  --amarillo: #ef9b0f;
+  --oscuro: #0d0d0d;
+  --gris: #6b6b6b;
+  --gris-claro: #e8e6e1;
+  --verde-ok: #1a8a5a;
+  --fondo: #f2efe8;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Fuente display (títulos, botones principales) — como "Syne" en el mockup. */
+.font-display {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }

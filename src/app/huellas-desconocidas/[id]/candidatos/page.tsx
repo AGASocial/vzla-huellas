@@ -51,52 +51,56 @@ export default function CandidatosHuellaDesconocidaPage() {
 
   if (confirmado) {
     return (
-      <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
-        <BackButton href="/" />
-        <h1 className="text-2xl font-bold">¡Coincidencia confirmada!</h1>
-        <p className="text-neutral-300">
+      <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
+        <div className="flex items-center gap-3">
+          <BackButton href="/" />
+          <h1 className="text-2xl font-display">¡Coincidencia confirmada!</h1>
+        </div>
+        <p className="text-[var(--gris)]">
           Contacta a la familia para darle seguimiento:
         </p>
-        <div className="rounded-lg bg-teal-900/40 p-4">
+        <div className="rounded-lg bg-[var(--verde-ok)]/10 border border-[var(--verde-ok)]/30 p-4">
           <p className="font-semibold">{confirmado.nombre_contacto}</p>
-          <p className="text-neutral-300">{confirmado.telefono_contacto}</p>
+          <p className="text-[var(--gris)]">{confirmado.telefono_contacto}</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
-      <BackButton href="/" />
+    <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold mb-1">Posibles coincidencias</h1>
-        <p className="text-neutral-400 text-sm">
+        <div className="flex items-center gap-3 mb-1">
+          <BackButton href="/" />
+          <h1 className="text-2xl font-display">Posibles coincidencias</h1>
+        </div>
+        <p className="text-[var(--gris)] text-sm">
           Compara visualmente la huella escaneada con los familiares
           registrados. El porcentaje es solo un filtro orientativo.
         </p>
       </div>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
 
       {huellaUrl && (
         <div>
-          <p className="text-sm text-neutral-400 mb-1">Huella escaneada</p>
+          <p className="text-sm text-[var(--gris)] mb-1">Huella escaneada</p>
           <Image src={huellaUrl} alt="Huella escaneada" width={128} height={128} className="rounded-lg w-32 h-auto" />
         </div>
       )}
 
       {(direccion || estadoPersona || observaciones) && (
-        <div className="rounded-lg border border-neutral-700 p-3 flex flex-col gap-2 text-sm">
+        <div className="rounded-lg bg-white border border-[var(--gris-claro)] p-3 flex flex-col gap-2 text-sm">
           {direccion && (
             <p>
-              <span className="text-neutral-400">Dirección: </span>
-              <span className="text-neutral-200">{direccion}</span>
+              <span className="text-[var(--gris)]">Dirección: </span>
+              <span className="text-[var(--oscuro)]">{direccion}</span>
             </p>
           )}
           {estadoPersona && (
             <p>
-              <span className="text-neutral-400">Estado: </span>
-              <span className="text-neutral-200">
+              <span className="text-[var(--gris)]">Estado: </span>
+              <span className="text-[var(--oscuro)]">
                 {estadoPersona === "fallecido" ? "Fallecido" : "Con vida"}
               </span>
             </p>
@@ -104,17 +108,17 @@ export default function CandidatosHuellaDesconocidaPage() {
           {/* GPS oculto por ahora — ver coords más abajo, queda guardado en BD */}
           {observaciones && (
             <div>
-              <p className="text-neutral-400 mb-1">Observaciones</p>
-              <p className="text-neutral-200 whitespace-pre-wrap">{observaciones}</p>
+              <p className="text-[var(--gris)] mb-1">Observaciones</p>
+              <p className="text-[var(--oscuro)] whitespace-pre-wrap">{observaciones}</p>
             </div>
           )}
         </div>
       )}
 
-      {candidatos === null && !error && <p className="text-neutral-400">Buscando coincidencias...</p>}
+      {candidatos === null && !error && <p className="text-[var(--gris)]">Buscando coincidencias...</p>}
 
       {candidatos !== null && candidatos.length === 0 && (
-        <p className="text-neutral-400">
+        <p className="text-[var(--gris)]">
           No hay familiares registrados todavía para comparar. Esta huella queda
           guardada y se comparará automáticamente cuando alguien registre un
           familiar.
@@ -125,7 +129,7 @@ export default function CandidatosHuellaDesconocidaPage() {
         {candidatos?.map(({ familiar, score }) => (
           <li
             key={familiar.id}
-            className="rounded-xl border border-neutral-700 p-4 flex flex-col gap-2"
+            className="rounded-xl bg-white border border-[var(--gris-claro)] p-4 flex flex-col gap-2"
           >
             <div className="flex items-center gap-3">
               <Image
@@ -137,14 +141,14 @@ export default function CandidatosHuellaDesconocidaPage() {
               />
               <div>
                 <p className="font-semibold">{familiar.nombre_completo}</p>
-                <p className="text-sm text-neutral-400">Score: {score}%</p>
+                <p className="text-sm text-[var(--gris)]">Score: {score}%</p>
               </div>
             </div>
 
             {abierto !== familiar.id ? (
               <button
                 onClick={() => setAbierto(familiar.id)}
-                className="rounded-lg border border-teal-700 text-teal-300 hover:bg-teal-900/40 py-2 text-sm font-semibold"
+                className="rounded-lg border border-[var(--verde-ok)] text-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/10 py-2 text-sm font-semibold"
               >
                 Es esta persona — confirmar coincidencia
               </button>

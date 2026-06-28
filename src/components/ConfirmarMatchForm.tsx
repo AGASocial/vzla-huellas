@@ -56,19 +56,19 @@ export function ConfirmarMatchForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 mt-3 border-t border-neutral-700 pt-3"
+      className="flex flex-col gap-3 mt-3 border-t border-[var(--gris-claro)] pt-3"
     >
-      <label className="flex flex-col gap-1 text-sm text-neutral-300">
+      <label className="flex flex-col gap-1 text-sm text-[var(--gris)]">
         Dirección actual del desconocido
         <input
           value={direccion}
           onChange={(event) => setDireccion(event.target.value)}
           required
-          className="rounded-lg bg-neutral-900 border border-neutral-700 px-3 py-2 text-white focus:outline-none focus:border-teal-500"
+          className="rounded-lg bg-white border border-[var(--gris-claro)] px-3 py-2 text-[var(--oscuro)] focus:outline-none focus:border-[var(--azul)]"
         />
       </label>
 
-      <fieldset className="flex flex-col gap-2 text-sm text-neutral-300">
+      <fieldset className="flex flex-col gap-2 text-sm text-[var(--gris)]">
         Estado de la persona desaparecida
         <div className="grid grid-cols-2 gap-3">
           <button
@@ -76,8 +76,8 @@ export function ConfirmarMatchForm({
             onClick={() => setEstado(estado === "con_vida" ? "" : "con_vida")}
             className={`rounded-xl p-5 text-left transition-colors ${
               estado === "con_vida"
-                ? "bg-teal-900/60 border border-teal-500"
-                : "border border-neutral-700 hover:border-neutral-500"
+                ? "bg-[var(--verde-ok)]/10 border border-[var(--verde-ok)] text-[var(--verde-ok)]"
+                : "bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 text-[var(--oscuro)]"
             }`}
           >
             <span className="text-lg font-semibold block">Con vida</span>
@@ -87,8 +87,8 @@ export function ConfirmarMatchForm({
             onClick={() => setEstado(estado === "fallecido" ? "" : "fallecido")}
             className={`rounded-xl p-5 text-left transition-colors ${
               estado === "fallecido"
-                ? "bg-teal-900/60 border border-teal-500"
-                : "border border-neutral-700 hover:border-neutral-500"
+                ? "bg-[var(--rojo)]/10 border border-[var(--rojo)] text-[var(--rojo)]"
+                : "bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 text-[var(--oscuro)]"
             }`}
           >
             <span className="text-lg font-semibold block">Fallecido</span>
@@ -96,12 +96,12 @@ export function ConfirmarMatchForm({
         </div>
       </fieldset>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
 
       <button
         type="submit"
         disabled={enviando}
-        className="rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-50 py-2 font-semibold"
+        className="rounded-lg bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 text-white disabled:opacity-50 py-2 font-display shadow-[0_4px_15px_rgba(26,138,90,0.3)]"
       >
         {enviando ? "Confirmando..." : "Confirmar coincidencia"}
       </button>

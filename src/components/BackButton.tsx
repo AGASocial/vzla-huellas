@@ -9,7 +9,7 @@ export function BackButton({ href }: { href?: string }) {
     <button
       onClick={() => (href ? router.push(href) : router.back())}
       aria-label="Volver"
-      className="inline-flex items-center gap-1 text-neutral-400 hover:text-white text-sm mb-4 -ml-1"
+      className="inline-flex items-center justify-center w-9 h-9 shrink-0 rounded-[10px] border border-[var(--gris-claro)] bg-white text-[var(--oscuro)] hover:bg-[var(--gris-claro)] transition-colors"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,6 @@ export function BackButton({ href }: { href?: string }) {
           clipRule="evenodd"
         />
       </svg>
-      Volver
     </button>
   );
 }

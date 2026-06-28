@@ -49,21 +49,23 @@ function GaleriaHuellas() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
-      <BackButton />
+    <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold mb-1">Huellas sin identificar</h1>
-        <p className="text-neutral-400 text-sm">
+        <div className="flex items-center gap-3 mb-1">
+          <BackButton />
+          <h1 className="text-2xl font-display">Huellas sin identificar</h1>
+        </div>
+        <p className="text-[var(--gris)] text-sm">
           Huellas escaneadas en el terreno que aún no tienen una coincidencia
           confirmada. Si reconoces a alguien, regístralo como familiar para
           comparar.
         </p>
       </div>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
-      {huellas === null && !error && <p className="text-neutral-400">Cargando...</p>}
+      {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
+      {huellas === null && !error && <p className="text-[var(--gris)]">Cargando...</p>}
       {huellas?.length === 0 && (
-        <p className="text-neutral-400">No hay huellas pendientes por ahora.</p>
+        <p className="text-[var(--gris)]">No hay huellas pendientes por ahora.</p>
       )}
 
       <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -75,7 +77,7 @@ function GaleriaHuellas() {
                 alt="Huella sin identificar"
                 fill
                 sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 16vw"
-                className="rounded-lg object-cover border border-neutral-700"
+                className="rounded-lg object-cover border border-[var(--gris-claro)]"
               />
             </Link>
           </li>
@@ -87,17 +89,17 @@ function GaleriaHuellas() {
           <button
             disabled={page <= 1}
             onClick={() => goToPage(page - 1)}
-            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm disabled:opacity-40 hover:border-neutral-500"
+            className="rounded-lg bg-white border border-[var(--gris-claro)] px-4 py-2 text-sm disabled:opacity-40 hover:border-[var(--oscuro)]/40"
           >
             Anterior
           </button>
-          <span className="text-sm text-neutral-400">
+          <span className="text-sm text-[var(--gris)]">
             Página {page} de {totalPages}
           </span>
           <button
             disabled={page >= totalPages}
             onClick={() => goToPage(page + 1)}
-            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm disabled:opacity-40 hover:border-neutral-500"
+            className="rounded-lg bg-white border border-[var(--gris-claro)] px-4 py-2 text-sm disabled:opacity-40 hover:border-[var(--oscuro)]/40"
           >
             Siguiente
           </button>

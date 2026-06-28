@@ -106,29 +106,33 @@ export default function NuevoFamiliarPage() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10">
-      <BackButton />
-      <h1 className="text-2xl font-bold mb-1">Sube los datos de tu familiar</h1>
-      <p className="text-neutral-400 text-sm mb-6">
+    <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10">
+      <div className="flex items-center gap-3 mb-1">
+        <BackButton />
+        <h1 className="text-2xl font-display">Sube los datos de tu familiar</h1>
+      </div>
+      <p className="text-[var(--gris)] text-sm mb-6">
         Registra a la persona desaparecida con su huella e información de
         contacto. Puedes subir la foto de la huella primero y llenar el resto
         después.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-3 items-start bg-amber-950/40 border border-amber-700/50 rounded-lg p-3 mb-6">
-        <Image
-          src="/huella_ejemplo.jpeg"
-          alt="Ejemplo de cómo debe verse la foto de la huella"
-          width={120}
-          height={150}
-          className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
-        />
-        <p className="text-amber-200 text-sm">
-          Usa la huella del <strong>dedo pulgar derecho</strong>, la misma
-          que aparece en la cédula de identidad. Toma la foto bien enfocada
-          y con buena luz, como en el ejemplo.
-        </p>
-      </div>
+      {!previewUrl && (
+        <div className="flex flex-col sm:flex-row gap-3 items-start bg-[#FFF9F0] border border-[var(--amarillo)]/40 rounded-lg p-3 mb-6">
+          <Image
+            src="/huella_ejemplo.jpeg"
+            alt="Ejemplo de cómo debe verse la foto de la huella"
+            width={120}
+            height={150}
+            className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
+          />
+          <p className="text-[#7a4f00] text-sm">
+            Usa la huella del <strong>dedo pulgar derecho</strong>, la misma
+            que aparece en la cédula de identidad. Toma la foto bien enfocada
+            y con buena luz, como en el ejemplo.
+          </p>
+        </div>
+      )}
 
       {previewUrl ? (
         <div className="flex items-center gap-4 mb-6">
@@ -138,22 +142,22 @@ export default function NuevoFamiliarPage() {
             width={96}
             height={96}
             unoptimized
-            className="rounded-lg w-24 h-24 object-cover border border-teal-700"
+            className="rounded-lg w-24 h-24 object-cover border border-[var(--verde-ok)]"
           />
           <div className="flex flex-col gap-2">
-            <p className="text-teal-300 text-sm">Huella lista para guardar.</p>
+            <p className="text-[var(--verde-ok)] text-sm">Huella lista para guardar.</p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
-                className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm hover:border-neutral-500"
+                className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-sm hover:border-[var(--oscuro)]/40"
               >
                 Tomar otra foto
               </button>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-lg border border-neutral-700 px-3 py-1.5 text-sm hover:border-neutral-500"
+                className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-sm hover:border-[var(--oscuro)]/40"
               >
                 Subir otra imagen
               </button>
@@ -165,20 +169,20 @@ export default function NuevoFamiliarPage() {
           <button
             type="button"
             onClick={() => cameraInputRef.current?.click()}
-            className="flex-1 rounded-xl bg-teal-900/60 hover:bg-teal-900 transition-colors p-5 text-left"
+            className="flex-1 rounded-xl bg-[var(--azul)] hover:bg-[var(--azul)]/90 text-white transition-colors p-5 text-left shadow-[0_4px_15px_rgba(0,36,125,0.3)]"
           >
-            <span className="text-lg font-semibold block">Tomar huella con el teléfono</span>
-            <span className="text-neutral-300 text-sm">
+            <span className="text-lg font-display block">Tomar huella con el teléfono</span>
+            <span className="text-white/80 text-sm">
               Usa la cámara para fotografiar la huella.
             </span>
           </button>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 rounded-xl border border-neutral-700 hover:border-neutral-500 transition-colors p-5 text-left"
+            className="flex-1 rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
           >
             <span className="text-lg font-semibold block">Subir huella</span>
-            <span className="text-neutral-300 text-sm">
+            <span className="text-[var(--gris)] text-sm">
               Selecciona una foto o escaneo existente.
             </span>
           </button>
@@ -260,12 +264,12 @@ export default function NuevoFamiliarPage() {
           <input name="telefono_familiar" required className={inputClass} />
         </Campo>
 
-        {error && <p className="sm:col-span-2 text-red-400 text-sm">{error}</p>}
+        {error && <p className="sm:col-span-2 text-[var(--rojo)] text-sm">{error}</p>}
 
         <button
           type="submit"
           disabled={enviando}
-          className="sm:col-span-2 mt-2 rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-50 py-3 font-semibold"
+          className="sm:col-span-2 mt-2 rounded-lg bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 text-white disabled:opacity-50 py-3 font-display shadow-[0_4px_15px_rgba(26,138,90,0.3)]"
         >
           {enviando ? "Guardando..." : "Guardar"}
         </button>
@@ -275,11 +279,11 @@ export default function NuevoFamiliarPage() {
 }
 
 const inputClass =
-  "rounded-lg bg-neutral-900 border border-neutral-700 px-3 py-2 text-white focus:outline-none focus:border-teal-500";
+  "rounded-lg bg-white border border-[var(--gris-claro)] px-3 py-2 text-[var(--oscuro)] focus:outline-none focus:border-[var(--azul)]";
 
 function Campo({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="flex flex-col gap-1 text-sm text-neutral-300">
+    <label className="flex flex-col gap-1 text-sm text-[var(--gris)]">
       {label}
       {children}
     </label>
