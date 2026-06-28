@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans } from "next/font/google";
+import { Space_Grotesk, DM_Sans } from "next/font/google";
 import { APP_VERSION, APP_COMMIT_SHA } from "@/lib/version";
 import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
-  weight: ["600", "700", "800"],
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  weight: ["500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${syne.variable} ${dmSans.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--fondo)]">
         <div className="h-[5px] w-full bg-[linear-gradient(to_right,var(--amarillo)_33.33%,var(--azul)_33.33%,var(--azul)_66.66%,var(--rojo)_66.66%)]" />
@@ -43,19 +43,7 @@ export default function RootLayout({
             competentes antes de actuar.
           </p>
           <p className="text-[var(--amarillo)]/60 text-xs mt-2">
-            Versión{" "}
-            {APP_COMMIT_SHA ? (
-              <a
-                href={`https://github.com/AGASocial/vzla-huellas/commit/${APP_COMMIT_SHA}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-[var(--amarillo)]"
-              >
-                {APP_VERSION}
-              </a>
-            ) : (
-              APP_VERSION
-            )}
+            Versión: {APP_VERSION}
           </p>
         </footer>
       </body>
