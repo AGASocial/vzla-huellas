@@ -164,22 +164,12 @@ export default function NuevoFamiliarPage() {
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <button
             type="button"
-            onClick={() => cameraInputRef.current?.click()}
-            className="flex-1 rounded-xl bg-[var(--azul)] hover:bg-[var(--azul)]/90 text-white transition-colors p-5 text-left shadow-[0_4px_15px_rgba(0,36,125,0.3)]"
-          >
-            <span className="text-lg font-display block">Tomar huella con el teléfono</span>
-            <span className="text-white/80 text-md">
-              Usa la cámara para fotografiar la huella.
-            </span>
-          </button>
-          <button
-            type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
+            className="flex-1 rounded-xl bg-[var(--azul)] border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
           >
-            <span className="text-lg font-semibold block">Subir huella</span>
-            <span className="text-[var(--gris)] text-md">
-              Selecciona una foto o escaneo existente.
+            <span className="text-lg text-white font-semibold block">Subir huella</span>
+            <span className="text-white text-md">
+              Toma una foto con la cámara o selecciona una foto existente.
             </span>
           </button>
         </div>

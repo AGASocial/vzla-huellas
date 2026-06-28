@@ -187,21 +187,11 @@ export default function EscanearPage() {
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           <button
             type="button"
-            onClick={() => cameraInputRef.current?.click()}
-            className="flex-1 rounded-xl bg-[var(--rojo)] hover:bg-[var(--rojo)]/90 text-white transition-colors p-5 text-left shadow-[0_4px_15px_rgba(207,20,43,0.3)]"
-          >
-            <span className="text-lg font-display block">Tomar huella con el teléfono</span>
-            <span className="text-white/80 text-sm">
-              Usa la cámara para fotografiar la huella de la persona desconocida.
-            </span>
-          </button>
-          <button
-            type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex-1 rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
+            className="flex-1 rounded-xl bg-[var(--verde-ok)] text-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
           >
             <span className="text-lg font-semibold block">Subir imagen de la huella</span>
-            <span className="text-[var(--gris)] text-sm">
+            <span className="text-white text-sm">
               Selecciona una foto o escaneo existente.
             </span>
           </button>
