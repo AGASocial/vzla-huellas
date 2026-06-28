@@ -24,7 +24,7 @@ export async function POST(
     .update({ match_confirmado_id: familiar_id, direccion, estado })
     .eq("id", id)
     .select(
-      "*, familiar:vzla_huellas_familiares_buscados!match_confirmado_id(nombre_completo, nombre_familiar, telefono_familiar)"
+      "*, familiar:vzla_huellas_familiares_buscados!match_confirmado_id(nombre_completo, telefono, nombre_familiar, telefono_familiar)"
     )
     .single();
 

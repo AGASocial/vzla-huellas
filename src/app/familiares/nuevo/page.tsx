@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 import { BackButton } from "@/components/BackButton";
 
 export default function NuevoFamiliarPage() {
@@ -41,7 +42,7 @@ export default function NuevoFamiliarPage() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white px-6 py-10 max-w-md mx-auto">
+    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
       <BackButton />
       <h1 className="text-2xl font-bold mb-1">Sube los datos de tu familiar</h1>
       <p className="text-neutral-400 text-sm mb-6">
@@ -49,7 +50,7 @@ export default function NuevoFamiliarPage() {
         contacto.
       </p>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Campo label="Nombre completo de la persona">
           <input name="nombre_completo" required className={inputClass} />
         </Campo>
@@ -70,12 +71,12 @@ export default function NuevoFamiliarPage() {
           <input name="numero_documento" className={inputClass} />
         </Campo>
 
-        <Campo label="Número de teléfono">
-          <input name="telefono" required className={inputClass} />
+        <Campo label="Número de teléfono (opcional)">
+          <input name="telefono" className={inputClass} />
         </Campo>
 
-        <Campo label="Dirección donde se encuentra">
-          <input name="direccion" required className={inputClass} />
+        <Campo label="Dirección donde se encuentra (opcional)">
+          <input name="direccion" className={inputClass} />
         </Campo>
 
         <Campo label="Correo electrónico (opcional)">
@@ -90,23 +91,40 @@ export default function NuevoFamiliarPage() {
           <input name="telefono_familiar" required className={inputClass} />
         </Campo>
 
-        <Campo label="Imagen de la huella digital">
-          <input
-            name="huella"
-            type="file"
-            accept="image/*"
-            capture="environment"
-            required
-            className={inputClass}
+        <div className="sm:col-span-2 flex flex-col sm:flex-row gap-3 items-start bg-amber-950/40 border border-amber-700/50 rounded-lg p-3">
+          <Image
+            src="/huella_ejemplo.jpeg"
+            alt="Ejemplo de cómo debe verse la foto de la huella"
+            width={120}
+            height={150}
+            className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
           />
-        </Campo>
+          <p className="text-amber-200 text-sm">
+            Usa la huella del <strong>dedo pulgar derecho</strong>, la misma
+            que aparece en la cédula de identidad. Toma la foto bien enfocada
+            y con buena luz, como en el ejemplo.
+          </p>
+        </div>
 
-        {error && <p className="text-red-400 text-sm">{error}</p>}
+        <div className="sm:col-span-2">
+          <Campo label="Imagen de la huella digital">
+            <input
+              name="huella"
+              type="file"
+              accept="image/*"
+              capture="environment"
+              required
+              className={inputClass}
+            />
+          </Campo>
+        </div>
+
+        {error && <p className="sm:col-span-2 text-red-400 text-sm">{error}</p>}
 
         <button
           type="submit"
           disabled={enviando}
-          className="mt-2 rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-50 py-3 font-semibold"
+          className="sm:col-span-2 mt-2 rounded-lg bg-teal-700 hover:bg-teal-600 disabled:opacity-50 py-3 font-semibold"
         >
           {enviando ? "Guardando..." : "Guardar"}
         </button>

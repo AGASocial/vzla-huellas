@@ -19,8 +19,8 @@ export default function CandidatosFamiliarPage() {
   const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
   const [abierto, setAbierto] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState<{
-    nombre_familiar: string;
-    telefono_familiar: string;
+    nombre_contacto: string;
+    telefono_contacto: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,22 +41,22 @@ export default function CandidatosFamiliarPage() {
 
   if (confirmado) {
     return (
-      <main className="min-h-screen bg-neutral-950 text-white px-6 py-10 max-w-md mx-auto flex flex-col gap-4">
+      <main className="min-h-screen bg-neutral-950 text-white w-full max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
         <BackButton />
         <h1 className="text-2xl font-bold">¡Coincidencia confirmada!</h1>
         <p className="text-neutral-300">
           Contacta a la familia para darle seguimiento:
         </p>
         <div className="rounded-lg bg-teal-900/40 p-4">
-          <p className="font-semibold">{confirmado.nombre_familiar}</p>
-          <p className="text-neutral-300">{confirmado.telefono_familiar}</p>
+          <p className="font-semibold">{confirmado.nombre_contacto}</p>
+          <p className="text-neutral-300">{confirmado.telefono_contacto}</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white px-6 py-10 max-w-md mx-auto flex flex-col gap-6">
+    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <BackButton />
       <div>
         <h1 className="text-2xl font-bold mb-1">Registro guardado</h1>

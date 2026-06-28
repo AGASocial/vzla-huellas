@@ -8,11 +8,11 @@ create table if not exists vzla_huellas_familiares_buscados (
   nombre_completo text not null,
   tipo_documento text not null check (tipo_documento in ('V', 'E', 'pasaporte', 'sin_documento')),
   numero_documento text,
-  telefono text not null,
-  direccion text not null,
+  telefono text,
+  direccion text,
   correo text,
-  nombre_familiar text not null,
-  telefono_familiar text not null,
+  nombre_familiar text,
+  telefono_familiar text,
   huella_url text not null,
   created_at timestamptz not null default now()
 );
@@ -57,3 +57,11 @@ create policy "vzla_huellas_desconocidas_bucket_public_read" on storage.objects
   for select using (bucket_id = 'vzla_huellas_desconocidas');
 create policy "vzla_huellas_desconocidas_bucket_public_insert" on storage.objects
   for insert with check (bucket_id = 'vzla_huellas_desconocidas');
+
+-- Migración: si la tabla ya existía con estas columnas como NOT NULL,
+-- vuelve a ejecutar este bloque para relajarlas (campos requeridos:
+-- nombre_completo, tipo_documento, nombre_familiar, telefono_familiar, huella).
+alter table vzla_huellas_familiares_buscados alter column direccion drop not null;
+alter table vzla_huellas_familiares_buscados alter column telefono drop not null;
+alter table vzla_huellas_familiares_buscados alter column nombre_familiar drop not null;
+alter table vzla_huellas_familiares_buscados alter column telefono_familiar drop not null;

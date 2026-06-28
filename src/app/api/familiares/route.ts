@@ -20,14 +20,7 @@ export async function POST(request: Request) {
   const nombre_familiar = String(formData.get("nombre_familiar") ?? "");
   const telefono_familiar = String(formData.get("telefono_familiar") ?? "");
 
-  if (
-    !nombre_completo ||
-    !tipo_documento ||
-    !telefono ||
-    !direccion ||
-    !nombre_familiar ||
-    !telefono_familiar
-  ) {
+  if (!nombre_completo || !tipo_documento || !nombre_familiar || !telefono_familiar) {
     return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
   }
 
@@ -53,8 +46,8 @@ export async function POST(request: Request) {
       nombre_completo,
       tipo_documento,
       numero_documento: numero_documento || null,
-      telefono,
-      direccion,
+      telefono: telefono || null,
+      direccion: direccion || null,
       correo: correo || null,
       nombre_familiar,
       telefono_familiar,

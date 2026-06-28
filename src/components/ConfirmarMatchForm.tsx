@@ -10,8 +10,8 @@ export function ConfirmarMatchForm({
   huellaDesconocidaId: string;
   familiarId: string;
   onConfirmado: (resultado: {
-    nombre_familiar: string;
-    telefono_familiar: string;
+    nombre_contacto: string;
+    telefono_contacto: string;
   }) => void;
 }) {
   const [direccion, setDireccion] = useState("");
@@ -42,9 +42,10 @@ export function ConfirmarMatchForm({
         return;
       }
 
+      const familiar = data.huellaDesconocida.familiar;
       onConfirmado({
-        nombre_familiar: data.huellaDesconocida.familiar.nombre_familiar,
-        telefono_familiar: data.huellaDesconocida.familiar.telefono_familiar,
+        nombre_contacto: familiar.nombre_familiar || familiar.nombre_completo,
+        telefono_contacto: familiar.telefono_familiar || familiar.telefono,
       });
     } catch {
       setError("No se pudo conectar con el servidor.");

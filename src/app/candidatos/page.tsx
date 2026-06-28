@@ -28,7 +28,7 @@ export default function GaleriaHuellasPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white px-6 py-10 max-w-md mx-auto flex flex-col gap-6">
+    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-3xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <BackButton />
       <div>
         <h1 className="text-2xl font-bold mb-1">Huellas sin identificar</h1>
@@ -45,7 +45,7 @@ export default function GaleriaHuellasPage() {
         <p className="text-neutral-400">No hay huellas pendientes por ahora.</p>
       )}
 
-      <ul className="grid grid-cols-3 gap-3">
+      <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {huellas?.map((huella) => (
           <li key={huella.id}>
             <Link href={`/huellas-desconocidas/${huella.id}/candidatos`}>
