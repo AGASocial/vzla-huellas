@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { APP_VERSION } from "@/lib/version";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,6 +38,7 @@ export default function RootLayout({
             Toda coincidencia debe confirmarse con autoridades, Cruz Roja u
             organismos forenses competentes.
           </p>
+          <p className="text-neutral-600 text-xs mt-2">Versión {APP_VERSION}</p>
         </footer>
       </body>
     </html>

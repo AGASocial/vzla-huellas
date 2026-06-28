@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# versión generada automáticamente en cada build (scripts/generate-version.mjs)
+src/lib/version.ts
