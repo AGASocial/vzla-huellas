@@ -44,11 +44,20 @@ export async function POST(request: Request) {
     step3_downloadedHex = hex(downloadedBuffer);
   }
 
+  // Descarga con fetch nativo (sin pasar por supabase-js), para aislar si
+  // el problema es del SDK al descargar o si el archivo ya quedó corrupto
+  // en el storage desde la subida.
+  const { data: publicUrlData } = supabase.storage.from("vzla_huellas_desconocidas").getPublicUrl(fileName);
+  const plainFetchResponse = await fetch(publicUrlData.publicUrl, { cache: "no-store" });
+  const plainFetchBuffer = Buffer.from(await plainFetchResponse.arrayBuffer());
+  const step4_plainFetchHex = hex(plainFetchBuffer);
+
   return NextResponse.json({
     step1_parsedHex,
     step2_normalizedHex,
     fileName,
     step3_downloadedHex,
     downloadError: downloadError?.message ?? null,
+    step4_plainFetchHex,
   });
 }
