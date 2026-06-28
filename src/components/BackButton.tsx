@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 
-export function BackButton() {
+export function BackButton({ href }: { href?: string }) {
   const router = useRouter();
 
   return (
     <button
-      onClick={() => router.back()}
+      onClick={() => (href ? router.push(href) : router.back())}
       aria-label="Volver"
       className="inline-flex items-center gap-1 text-neutral-400 hover:text-white text-sm mb-4 -ml-1"
     >
