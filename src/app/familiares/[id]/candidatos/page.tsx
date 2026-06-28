@@ -119,9 +119,19 @@ export default function CandidatosFamiliarPage() {
                     Estado: {huellaDesconocida.estado === "fallecido" ? "Fallecido" : "Con vida"}
                   </p>
                 )}
-                {/* GPS oculto por ahora */}
+                {huellaDesconocida.latitud != null && huellaDesconocida.longitud != null && (
+                  <a
+                    href={`https://www.google.com/maps?q=${huellaDesconocida.latitud},${huellaDesconocida.longitud}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[var(--azul)] underline"
+                  >
+                    Ver ubicación del escaneo en Google Maps
+                  </a>
+                )}
                 {huellaDesconocida.observaciones && (
                   <p className="text-sm text-[var(--oscuro)] mt-1">
+                    <span className="text-[var(--gris)]">Observación: </span>
                     {huellaDesconocida.observaciones}
                   </p>
                 )}

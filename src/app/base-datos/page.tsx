@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { BackButton } from "@/components/BackButton";
 
 const MIN_QUERY_LENGTH = 3;
@@ -100,34 +101,36 @@ export default function BaseDatosPage() {
       {!buscando && resultados !== null && resultados.length > 0 && (
         <ul className="flex flex-col gap-3">
           {resultados.map((resultado) => (
-            <li
-              key={resultado.id}
-              className="rounded-xl bg-white border border-[var(--gris-claro)] p-4 flex items-center gap-3"
-            >
-              <Image
-                src={resultado.huella_url}
-                alt={`Huella de ${resultado.nombre_completo}`}
-                width={56}
-                height={56}
-                className="rounded-lg w-14 h-14 object-cover shrink-0"
-              />
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold truncate">{resultado.nombre_completo}</p>
-                {resultado.numero_documento && (
-                  <p className="text-sm text-[var(--gris)]">
-                    {resultado.tipo_documento}-{resultado.numero_documento}
-                  </p>
-                )}
-              </div>
-              <span
-                className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-                  resultado.estado === "encontrado"
-                    ? "bg-[var(--verde-ok)]/10 text-[var(--verde-ok)]"
-                    : "bg-[var(--azul)]/10 text-[var(--azul)]"
-                }`}
+            <li key={resultado.id}>
+              <Link
+                href={`/familiares/${resultado.id}/candidatos`}
+                className="rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-4 flex items-center gap-3"
               >
-                {resultado.estado === "encontrado" ? "Encontrado" : "Buscando"}
-              </span>
+                <Image
+                  src={resultado.huella_url}
+                  alt={`Huella de ${resultado.nombre_completo}`}
+                  width={56}
+                  height={56}
+                  className="rounded-lg w-14 h-14 object-cover shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold truncate">{resultado.nombre_completo}</p>
+                  {resultado.numero_documento && (
+                    <p className="text-sm text-[var(--gris)]">
+                      {resultado.tipo_documento}-{resultado.numero_documento}
+                    </p>
+                  )}
+                </div>
+                <span
+                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+                    resultado.estado === "encontrado"
+                      ? "bg-[var(--verde-ok)]/10 text-[var(--verde-ok)]"
+                      : "bg-[var(--azul)]/10 text-[var(--azul)]"
+                  }`}
+                >
+                  {resultado.estado === "encontrado" ? "Encontrado" : "Buscando"}
+                </span>
+              </Link>
             </li>
           ))}
         </ul>
