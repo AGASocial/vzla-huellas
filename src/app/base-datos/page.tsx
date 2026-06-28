@@ -79,7 +79,7 @@ export default function BaseDatosPage() {
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Buscar por documento, correo o teléfono..."
+          placeholder="Buscar por nombre, documento, correo o teléfono..."
           className="w-full rounded-lg bg-white border border-[var(--gris-claro)] px-4 py-3 text-[var(--oscuro)] focus:outline-none focus:border-[var(--azul)]"
         />
         <p className="text-[var(--gris)] text-xs mt-1">

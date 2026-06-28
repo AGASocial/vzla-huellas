@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       "id, nombre_completo, tipo_documento, numero_documento, huella_url, matches:vzla_huellas_huellas_desconocidas(id)"
     )
     .or(
-      `numero_documento.ilike.${patron},correo.ilike.${patron},telefono.ilike.${patron},telefono_familiar.ilike.${patron}`
+      `nombre_completo.ilike.${patron},numero_documento.ilike.${patron},correo.ilike.${patron},telefono.ilike.${patron},telefono_familiar.ilike.${patron}`
     )
     .order("created_at", { ascending: false })
     .limit(RESULT_LIMIT);
