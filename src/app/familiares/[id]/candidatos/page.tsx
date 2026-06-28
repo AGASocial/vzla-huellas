@@ -9,6 +9,11 @@ import { BackButton } from "@/components/BackButton";
 type HuellaDesconocida = {
   id: string;
   huella_url: string;
+  observaciones: string | null;
+  direccion: string | null;
+  estado: string | null;
+  latitud: number | null;
+  longitud: number | null;
 };
 
 type Candidato = { huellaDesconocida: HuellaDesconocida; score: number };
@@ -100,7 +105,23 @@ export default function CandidatosFamiliarPage() {
                 height={64}
                 className="rounded-lg w-16 h-16 object-cover"
               />
-              <p className="text-sm text-neutral-400">Score: {score}%</p>
+              <div>
+                <p className="text-sm text-neutral-400">Score: {score}%</p>
+                {huellaDesconocida.direccion && (
+                  <p className="text-sm text-neutral-300">{huellaDesconocida.direccion}</p>
+                )}
+                {huellaDesconocida.estado && (
+                  <p className="text-sm text-neutral-300">
+                    Estado: {huellaDesconocida.estado === "fallecido" ? "Fallecido" : "Con vida"}
+                  </p>
+                )}
+                {/* GPS oculto por ahora */}
+                {huellaDesconocida.observaciones && (
+                  <p className="text-sm text-neutral-300 mt-1">
+                    {huellaDesconocida.observaciones}
+                  </p>
+                )}
+              </div>
             </div>
 
             {abierto !== huellaDesconocida.id ? (

@@ -17,6 +17,10 @@ type Candidato = { familiar: Familiar; score: number };
 export default function CandidatosHuellaDesconocidaPage() {
   const params = useParams<{ id: string }>();
   const [huellaUrl, setHuellaUrl] = useState<string | null>(null);
+  const [observaciones, setObservaciones] = useState<string | null>(null);
+  const [direccion, setDireccion] = useState<string | null>(null);
+  const [estadoPersona, setEstadoPersona] = useState<string | null>(null);
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
   const [abierto, setAbierto] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState<{
@@ -34,6 +38,12 @@ export default function CandidatosHuellaDesconocidaPage() {
           return;
         }
         setHuellaUrl(data.huellaDesconocida.huella_url);
+        setObservaciones(data.huellaDesconocida.observaciones);
+        setDireccion(data.huellaDesconocida.direccion);
+        setEstadoPersona(data.huellaDesconocida.estado);
+        if (data.huellaDesconocida.latitud && data.huellaDesconocida.longitud) {
+          setCoords({ lat: data.huellaDesconocida.latitud, lng: data.huellaDesconocida.longitud });
+        }
         setCandidatos(data.candidatos);
       })
       .catch(() => setError("No se pudo cargar la información."));
@@ -72,6 +82,32 @@ export default function CandidatosHuellaDesconocidaPage() {
         <div>
           <p className="text-sm text-neutral-400 mb-1">Huella escaneada</p>
           <Image src={huellaUrl} alt="Huella escaneada" width={128} height={128} className="rounded-lg w-32 h-auto" />
+        </div>
+      )}
+
+      {(direccion || estadoPersona || observaciones) && (
+        <div className="rounded-lg border border-neutral-700 p-3 flex flex-col gap-2 text-sm">
+          {direccion && (
+            <p>
+              <span className="text-neutral-400">Dirección: </span>
+              <span className="text-neutral-200">{direccion}</span>
+            </p>
+          )}
+          {estadoPersona && (
+            <p>
+              <span className="text-neutral-400">Estado: </span>
+              <span className="text-neutral-200">
+                {estadoPersona === "fallecido" ? "Fallecido" : "Con vida"}
+              </span>
+            </p>
+          )}
+          {/* GPS oculto por ahora — ver coords más abajo, queda guardado en BD */}
+          {observaciones && (
+            <div>
+              <p className="text-neutral-400 mb-1">Observaciones</p>
+              <p className="text-neutral-200 whitespace-pre-wrap">{observaciones}</p>
+            </div>
+          )}
         </div>
       )}
 

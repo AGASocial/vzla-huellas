@@ -48,7 +48,8 @@ export async function GET(
       );
       if (!otroVector) continue;
       const score = await matcher.compareFeatures(familiarVector, otroVector);
-      candidatos.push({ huellaDesconocida, score });
+      const { latitud, longitud, ...huellaDesconocidaSinCoords } = huellaDesconocida;
+      candidatos.push({ huellaDesconocida: huellaDesconocidaSinCoords, score });
     }
   }
   candidatos.sort((a, b) => b.score - a.score);

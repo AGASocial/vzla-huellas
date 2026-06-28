@@ -37,9 +37,27 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const formData = await request.formData();
   const huella = formData.get("huella") as File | null;
+  const observaciones = String(formData.get("observaciones") ?? "").trim();
+  const direccion = String(formData.get("direccion") ?? "").trim();
+  const estado = String(formData.get("estado") ?? "").trim();
+  const latitudRaw = formData.get("latitud");
+  const longitudRaw = formData.get("longitud");
 
   if (!huella) {
     return NextResponse.json({ error: "Falta la imagen de la huella" }, { status: 400 });
+  }
+
+  if (estado && estado !== "fallecido" && estado !== "con_vida") {
+    return NextResponse.json({ error: "Estado inválido" }, { status: 400 });
+  }
+
+  const latitud = latitudRaw ? Number(latitudRaw) : null;
+  const longitud = longitudRaw ? Number(longitudRaw) : null;
+  if (
+    (latitud !== null && (Number.isNaN(latitud) || latitud < -90 || latitud > 90)) ||
+    (longitud !== null && (Number.isNaN(longitud) || longitud < -180 || longitud > 180))
+  ) {
+    return NextResponse.json({ error: "Coordenadas inválidas" }, { status: 400 });
   }
 
   const supabase = createServerClient();
@@ -90,7 +108,15 @@ export async function POST(request: Request) {
 
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_huellas_desconocidas")
-    .insert({ huella_url: publicUrlData.publicUrl, huella_vector: huellaVector })
+    .insert({
+      huella_url: publicUrlData.publicUrl,
+      huella_vector: huellaVector,
+      observaciones: observaciones || null,
+      direccion: direccion || null,
+      estado: estado || null,
+      latitud,
+      longitud,
+    })
     .select()
     .single();
 

@@ -68,29 +68,31 @@ export function ConfirmarMatchForm({
         />
       </label>
 
-      <fieldset className="flex flex-col gap-1 text-sm text-neutral-300">
+      <fieldset className="flex flex-col gap-2 text-sm text-neutral-300">
         Estado de la persona desaparecida
-        <div className="flex gap-4 mt-1">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name={`estado-${huellaDesconocidaId}`}
-              value="fallecido"
-              checked={estado === "fallecido"}
-              onChange={() => setEstado("fallecido")}
-            />
-            Fallecido
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name={`estado-${huellaDesconocidaId}`}
-              value="con_vida"
-              checked={estado === "con_vida"}
-              onChange={() => setEstado("con_vida")}
-            />
-            Con vida
-          </label>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setEstado(estado === "con_vida" ? "" : "con_vida")}
+            className={`rounded-xl p-5 text-left transition-colors ${
+              estado === "con_vida"
+                ? "bg-teal-900/60 border border-teal-500"
+                : "border border-neutral-700 hover:border-neutral-500"
+            }`}
+          >
+            <span className="text-lg font-semibold block">Con vida</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setEstado(estado === "fallecido" ? "" : "fallecido")}
+            className={`rounded-xl p-5 text-left transition-colors ${
+              estado === "fallecido"
+                ? "bg-teal-900/60 border border-teal-500"
+                : "border border-neutral-700 hover:border-neutral-500"
+            }`}
+          >
+            <span className="text-lg font-semibold block">Fallecido</span>
+          </button>
         </div>
       </fieldset>
 

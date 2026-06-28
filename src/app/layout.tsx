@@ -27,7 +27,18 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-neutral-950">
+        <div className="flex-1">{children}</div>
+        <footer className="w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 text-center">
+          <p className="text-neutral-500 text-xs">
+            Esta es una herramienta de ayuda comunitaria, no un servicio
+            oficial ni un sistema biométrico forense. Úsala bajo tu propio
+            riesgo y verifica siempre las imágenes y datos antes de actuar.
+            Toda coincidencia debe confirmarse con autoridades, Cruz Roja u
+            organismos forenses competentes.
+          </p>
+        </footer>
+      </body>
     </html>
   );
 }

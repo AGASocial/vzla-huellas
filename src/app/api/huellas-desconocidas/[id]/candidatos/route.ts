@@ -52,5 +52,10 @@ export async function GET(
   }
   candidatos.sort((a, b) => b.score - a.score);
 
-  return NextResponse.json({ huellaDesconocida, candidatos: candidatos.slice(0, 20) });
+  const { latitud, longitud, ...huellaDesconocidaSinCoords } = huellaDesconocida;
+
+  return NextResponse.json({
+    huellaDesconocida: huellaDesconocidaSinCoords,
+    candidatos: candidatos.slice(0, 20),
+  });
 }
