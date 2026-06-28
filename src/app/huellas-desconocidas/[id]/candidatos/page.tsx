@@ -51,7 +51,7 @@ export default function CandidatosHuellaDesconocidaPage() {
 
   if (confirmado) {
     return (
-      <main className="min-h-screen bg-neutral-950 text-white w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
+      <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
         <BackButton />
         <h1 className="text-2xl font-bold">¡Coincidencia confirmada!</h1>
         <p className="text-neutral-300">
@@ -66,7 +66,7 @@ export default function CandidatosHuellaDesconocidaPage() {
   }
 
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
+    <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <BackButton />
       <div>
         <h1 className="text-2xl font-bold mb-1">Posibles coincidencias</h1>

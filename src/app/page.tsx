@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-neutral-950 text-white w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-8">
+    <main className="min-h-screen bg-neutral-950 text-white w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-8">
       <header className="flex flex-col gap-1">
         <h1 className="text-3xl font-serif font-bold">Reencuentro</h1>
         <p className="text-neutral-400 text-sm">
