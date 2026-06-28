@@ -1,0 +1,126 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { ConfirmarMatchForm } from "@/components/ConfirmarMatchForm";
+import { BackButton } from "@/components/BackButton";
+
+type Familiar = {
+  id: string;
+  nombre_completo: string;
+  huella_url: string;
+};
+
+type Candidato = { familiar: Familiar; score: number };
+
+export default function CandidatosHuellaDesconocidaPage() {
+  const params = useParams<{ id: string }>();
+  const [huellaUrl, setHuellaUrl] = useState<string | null>(null);
+  const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
+  const [abierto, setAbierto] = useState<string | null>(null);
+  const [confirmado, setConfirmado] = useState<{
+    nombre_familiar: string;
+    telefono_familiar: string;
+  } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/huellas-desconocidas/${params.id}/candidatos`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          setError(data.error);
+          return;
+        }
+        setHuellaUrl(data.huellaDesconocida.huella_url);
+        setCandidatos(data.candidatos);
+      })
+      .catch(() => setError("No se pudo cargar la información."));
+  }, [params.id]);
+
+  if (confirmado) {
+    return (
+      <main className="min-h-screen bg-neutral-950 text-white px-6 py-10 max-w-md mx-auto flex flex-col gap-4">
+        <BackButton />
+        <h1 className="text-2xl font-bold">¡Coincidencia confirmada!</h1>
+        <p className="text-neutral-300">
+          Contacta a la familia para darle seguimiento:
+        </p>
+        <div className="rounded-lg bg-teal-900/40 p-4">
+          <p className="font-semibold">{confirmado.nombre_familiar}</p>
+          <p className="text-neutral-300">{confirmado.telefono_familiar}</p>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-neutral-950 text-white px-6 py-10 max-w-md mx-auto flex flex-col gap-6">
+      <BackButton />
+      <div>
+        <h1 className="text-2xl font-bold mb-1">Posibles coincidencias</h1>
+        <p className="text-neutral-400 text-sm">
+          Compara visualmente la huella escaneada con los familiares
+          registrados. El porcentaje es solo un filtro orientativo.
+        </p>
+      </div>
+
+      {error && <p className="text-red-400 text-sm">{error}</p>}
+
+      {huellaUrl && (
+        <div>
+          <p className="text-sm text-neutral-400 mb-1">Huella escaneada</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={huellaUrl} alt="Huella escaneada" className="rounded-lg w-32" />
+        </div>
+      )}
+
+      {candidatos === null && !error && <p className="text-neutral-400">Buscando coincidencias...</p>}
+
+      {candidatos !== null && candidatos.length === 0 && (
+        <p className="text-neutral-400">
+          No hay familiares registrados todavía para comparar. Esta huella queda
+          guardada y se comparará automáticamente cuando alguien registre un
+          familiar.
+        </p>
+      )}
+
+      <ul className="flex flex-col gap-4">
+        {candidatos?.map(({ familiar, score }) => (
+          <li
+            key={familiar.id}
+            className="rounded-xl border border-neutral-700 p-4 flex flex-col gap-2"
+          >
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={familiar.huella_url}
+                alt={`Huella de ${familiar.nombre_completo}`}
+                className="rounded-lg w-16 h-16 object-cover"
+              />
+              <div>
+                <p className="font-semibold">{familiar.nombre_completo}</p>
+                <p className="text-sm text-neutral-400">Score: {score}%</p>
+              </div>
+            </div>
+
+            {abierto !== familiar.id ? (
+              <button
+                onClick={() => setAbierto(familiar.id)}
+                className="rounded-lg border border-teal-700 text-teal-300 hover:bg-teal-900/40 py-2 text-sm font-semibold"
+              >
+                Es esta persona — confirmar coincidencia
+              </button>
+            ) : (
+              <ConfirmarMatchForm
+                huellaDesconocidaId={params.id}
+                familiarId={familiar.id}
+                onConfirmado={setConfirmado}
+              />
+            )}
+          </li>
+        ))}
+      </ul>
+    </main>
+  );
+}
