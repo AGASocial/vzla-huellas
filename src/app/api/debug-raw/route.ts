@@ -12,6 +12,17 @@ function hex(buffer: Buffer, len = 24) {
 // paso del pipeline real (parseo -> normalización -> subida -> descarga) para
 // aislar exactamente dónde se corrompen los bytes.
 export async function POST(request: Request) {
+  try {
+    return await handle(request);
+  } catch (error) {
+    return NextResponse.json(
+      { fatalError: error instanceof Error ? error.stack ?? error.message : String(error) },
+      { status: 500 }
+    );
+  }
+}
+
+async function handle(request: Request) {
   const { file } = await parseMultipart(request);
   if (!file) {
     return NextResponse.json({ error: "sin archivo" }, { status: 400 });
@@ -62,7 +73,6 @@ export async function POST(request: Request) {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
         "Content-Type": "image/jpeg",
-        "Content-Length": String(normalized.length),
       },
       body: new Uint8Array(normalized),
     }
