@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
+import { normalizeToJpeg } from "@/lib/normalize-image";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -63,13 +64,22 @@ export async function POST(request: Request) {
   }
 
   const supabase = createServerClient();
-  const huellaBuffer = Buffer.from(await huella.arrayBuffer());
-  const fileName = `${randomUUID()}-${huella.name}`;
+
+  let huellaBuffer: Buffer;
+  try {
+    huellaBuffer = await normalizeToJpeg(Buffer.from(await huella.arrayBuffer()));
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "No se pudo procesar la imagen" },
+      { status: 400 }
+    );
+  }
+  const fileName = `${randomUUID()}.jpg`;
 
   const { error: uploadError } = await supabase.storage
     .from("vzla_huellas_familiares")
     .upload(fileName, huellaBuffer, {
-      contentType: huella.type,
+      contentType: "image/jpeg",
       // El nombre del archivo es único (UUID) y nunca se sobreescribe:
       // se puede cachear como inmutable por un año sin riesgo.
       cacheControl: "31536000, immutable",
@@ -84,7 +94,20 @@ export async function POST(request: Request) {
     .getPublicUrl(fileName);
 
   const matcher = getMatcher();
-  const huellaVector = await matcher.extractFeatures(huellaBuffer);
+  let huellaVector: string;
+  try {
+    huellaVector = await matcher.extractFeatures(huellaBuffer);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "No se pudo analizar la huella. Intenta con otra foto.",
+      },
+      { status: 400 }
+    );
+  }
 
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_familiares_buscados")
