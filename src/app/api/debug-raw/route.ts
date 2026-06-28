@@ -64,7 +64,7 @@ export async function POST(request: Request) {
         "Content-Type": "image/jpeg",
         "Content-Length": String(normalized.length),
       },
-      body: normalized,
+      body: new Uint8Array(normalized),
     }
   );
   const manualUploadOk = manualUploadResponse.ok;
