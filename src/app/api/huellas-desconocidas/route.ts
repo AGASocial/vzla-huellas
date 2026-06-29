@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
-import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
 import { parseMultipart } from "@/lib/parse-multipart";
 import { uploadToStorage } from "@/lib/storage-upload";
@@ -124,35 +123,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  const { data: familiares, error: fetchError } = await supabase
-    .from("vzla_huellas_familiares_buscados")
-    .select("*");
-
-  if (fetchError) {
-    return NextResponse.json({ huellaDesconocida: inserted, candidatos: [] });
-  }
-
-  const endCompare = startTimer();
-  const candidatos = [];
-  for (const familiar of familiares ?? []) {
-    const otroVector = await getOrComputeVector(
-      supabase,
-      "vzla_huellas_familiares_buscados",
-      familiar,
-      matcher
-    );
-    if (!otroVector) continue;
-    const score = await matcher.compareFeatures(huellaVector, otroVector);
-    candidatos.push({ familiar, score });
-  }
-  candidatos.sort((a, b) => b.score - a.score);
-  logMetric("hash_huella", {
-    route: "POST /api/huellas-desconocidas",
-    fase: "compare",
-    comparaciones: familiares?.length ?? 0,
-    duration_ms: endCompare(),
-  });
-
+  // Igual que en POST /api/familiares: la comparación contra registros
+  // existentes la hace la pantalla de candidatos al cargar, no este POST.
   logMetric("endpoint", { route: "POST /api/huellas-desconocidas", duration_ms: endTotal() });
-  return NextResponse.json({ huellaDesconocida: inserted, candidatos });
+  return NextResponse.json({ huellaDesconocida: inserted });
 }

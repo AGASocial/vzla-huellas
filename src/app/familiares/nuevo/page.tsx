@@ -94,10 +94,6 @@ export default function NuevoFamiliarPage() {
         return;
       }
 
-      sessionStorage.setItem(
-        "candidatos_familiar",
-        JSON.stringify({ familiar: data.familiar, candidatos: data.candidatos })
-      );
       router.push(`/familiares/${data.familiar.id}/candidatos`);
     } catch {
       setError("No se pudo conectar con el servidor.");

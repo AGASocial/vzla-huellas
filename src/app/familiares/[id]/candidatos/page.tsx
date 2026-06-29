@@ -109,7 +109,12 @@ export default function CandidatosFamiliarPage() {
         </div>
       )}
 
-      {candidatos === null && !error && <p className="text-[var(--gris)]">Buscando coincidencias...</p>}
+      {candidatos === null && !error && (
+        <div className="flex items-center gap-3 text-[var(--gris)]">
+          <span className="inline-block w-4 h-4 rounded-full border-2 border-[var(--gris-claro)] border-t-[var(--azul)] animate-spin" />
+          <p>Buscando coincidencias... esto puede tardar un poco si hay muchos registros.</p>
+        </div>
+      )}
 
       {candidatos !== null && candidatosVisibles.length === 0 && (
         <p className="text-[var(--gris)]">

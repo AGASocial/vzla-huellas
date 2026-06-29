@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
-import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
 import { parseMultipart } from "@/lib/parse-multipart";
 import { uploadToStorage } from "@/lib/storage-upload";
@@ -130,36 +129,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  const { data: huellasDesconocidas, error: fetchError } = await supabase
-    .from("vzla_huellas_huellas_desconocidas")
-    .select("*")
-    .is("match_confirmado_id", null);
-
-  if (fetchError) {
-    return NextResponse.json({ familiar: inserted, candidatos: [] });
-  }
-
-  const endCompare = startTimer();
-  const candidatos = [];
-  for (const huellaDesconocida of huellasDesconocidas ?? []) {
-    const otroVector = await getOrComputeVector(
-      supabase,
-      "vzla_huellas_huellas_desconocidas",
-      huellaDesconocida,
-      matcher
-    );
-    if (!otroVector) continue;
-    const score = await matcher.compareFeatures(huellaVector, otroVector);
-    candidatos.push({ huellaDesconocida, score });
-  }
-  candidatos.sort((a, b) => b.score - a.score);
-  logMetric("hash_huella", {
-    route: "POST /api/familiares",
-    fase: "compare",
-    comparaciones: huellasDesconocidas?.length ?? 0,
-    duration_ms: endCompare(),
-  });
-
+  // La comparación contra huellas existentes no se hace aquí: la pantalla
+  // de candidatos (a la que el cliente redirige justo después) ya la hace
+  // por su cuenta al cargar, con su propio loading. Hacerla también en este
+  // POST duplicaba el trabajo y era lo que dejaba al usuario esperando
+  // varios segundos con la pantalla "pegada" antes de poder navegar.
   logMetric("endpoint", { route: "POST /api/familiares", duration_ms: endTotal() });
-  return NextResponse.json({ familiar: inserted, candidatos });
+  return NextResponse.json({ familiar: inserted });
 }
