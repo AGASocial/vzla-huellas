@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { BackButton } from "@/components/BackButton";
@@ -130,28 +131,17 @@ export default function EscanearPage() {
         <BackButton />
         <h1 className="text-2xl font-display">Escanear huellas digitales</h1>
       </div>
-      <p className="text-[var(--gris)] text-sm mb-6">
+      <p className="text-[var(--gris)] text-sm mb-2">
         Toma o sube la huella de una persona desaparecida o fallecida para
         buscar coincidencias. Puedes subir la foto primero y completar los
         detalles después.
       </p>
-
-      {!previewUrl && (
-        <div className="flex flex-col sm:flex-row gap-3 items-start bg-[#FFF9F0] border border-[var(--amarillo)]/40 rounded-lg p-3 mb-6">
-          <Image
-            src="/huella_ejemplo.jpeg"
-            alt="Ejemplo de cómo debe verse la foto de la huella"
-            width={120}
-            height={150}
-            className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
-          />
-          <p className="text-[#7a4f00] text-sm">
-            Usa el <strong>dedo pulgar derecho</strong> de la persona
-            desconocida si es posible. Toma la foto bien enfocada y con buena
-            luz, como en el ejemplo.
-          </p>
-        </div>
-      )}
+      <Link
+        href="/escanear/guia"
+        className="inline-block text-sm text-[var(--azul)] underline mb-6"
+      >
+        Ver ayuda
+      </Link>
 
       {previewUrl ? (
         <div className="flex items-center gap-4 mb-6">

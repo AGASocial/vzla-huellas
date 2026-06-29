@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SKIP_GUIA_ESCANEO_KEY } from "@/lib/skip-guia-escaneo";
 
 function ChevronIcon({ className }: { className?: string }) {
   return (
@@ -19,6 +23,13 @@ function ChevronIcon({ className }: { className?: string }) {
 }
 
 export default function Home() {
+  const router = useRouter();
+
+  function irAEscanear() {
+    const saltarGuia = localStorage.getItem(SKIP_GUIA_ESCANEO_KEY) === "true";
+    router.push(saltarGuia ? "/escanear" : "/escanear/guia");
+  }
+
   return (
     <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-8">
       <header className="flex flex-col gap-1 bg-[var(--oscuro)] text-white -mx-4 sm:-mx-8 -mt-6 sm:-mt-10 px-4 sm:px-8 py-6 sm:py-10 mb-2">
@@ -75,9 +86,9 @@ export default function Home() {
           <h3 className="text-2xl font-display uppercase tracking-wide text-[var(--gris)]">
             Para colaboradores
           </h3>
-          <Link
-            href="/escanear"
-            className="rounded-xl bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 active:scale-[0.98] text-white transition-all p-6 flex flex-col gap-1 shadow-[0_4px_20px_rgba(26,138,90,0.35)]"
+          <button
+            onClick={irAEscanear}
+            className="rounded-xl bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 active:scale-[0.98] text-white transition-all p-6 flex flex-col gap-1 shadow-[0_4px_20px_rgba(26,138,90,0.35)] text-left"
           >
             <span className="flex items-center justify-between gap-3">
               <span className="text-2xl font-display">Ayúdanos a registrar huellas digitales en todas partes <u>haz click aquí</u></span>
@@ -86,7 +97,7 @@ export default function Home() {
             <span className="text-white/80 text-2xl">
               Ayudanos a registrar huellas digitales de fallecidos y personas heridas o perdidas entrando a esta opción y siguiendo los pasos a continuacion.
             </span>
-          </Link>
+          </button>
         </div>
       </nav>
     </main>
