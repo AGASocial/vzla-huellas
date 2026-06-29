@@ -6,8 +6,10 @@ import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
 import { parseMultipart } from "@/lib/parse-multipart";
 import { uploadToStorage } from "@/lib/storage-upload";
+import { startTimer, logMetric } from "@/lib/timing";
 
 export async function POST(request: Request) {
+  const endTotal = startTimer();
   const { fields, file } = await parseMultipart(request);
 
   if (!file) {
@@ -90,9 +92,11 @@ export async function POST(request: Request) {
 
   const matcher = getMatcher();
   let huellaVector: string;
+  const endExtract = startTimer();
   try {
     huellaVector = await matcher.extractFeatures(huellaBuffer);
   } catch (error) {
+    logMetric("hash_huella", { route: "POST /api/familiares", fase: "extract", ok: false, duration_ms: endExtract() });
     return NextResponse.json(
       {
         error:
@@ -103,6 +107,7 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  logMetric("hash_huella", { route: "POST /api/familiares", fase: "extract", ok: true, duration_ms: endExtract() });
 
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_familiares_buscados")
@@ -134,6 +139,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ familiar: inserted, candidatos: [] });
   }
 
+  const endCompare = startTimer();
   const candidatos = [];
   for (const huellaDesconocida of huellasDesconocidas ?? []) {
     const otroVector = await getOrComputeVector(
@@ -147,6 +153,13 @@ export async function POST(request: Request) {
     candidatos.push({ huellaDesconocida, score });
   }
   candidatos.sort((a, b) => b.score - a.score);
+  logMetric("hash_huella", {
+    route: "POST /api/familiares",
+    fase: "compare",
+    comparaciones: huellasDesconocidas?.length ?? 0,
+    duration_ms: endCompare(),
+  });
 
+  logMetric("endpoint", { route: "POST /api/familiares", duration_ms: endTotal() });
   return NextResponse.json({ familiar: inserted, candidatos });
 }

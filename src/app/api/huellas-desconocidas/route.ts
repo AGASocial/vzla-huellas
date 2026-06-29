@@ -6,6 +6,7 @@ import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
 import { normalizeToJpeg } from "@/lib/normalize-image";
 import { parseMultipart } from "@/lib/parse-multipart";
 import { uploadToStorage } from "@/lib/storage-upload";
+import { startTimer, logMetric } from "@/lib/timing";
 
 const PAGE_SIZE = 20;
 
@@ -37,6 +38,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const endTotal = startTimer();
   const { fields, file } = await parseMultipart(request);
   const observaciones = String(fields.observaciones ?? "").trim();
   const direccion = String(fields.direccion ?? "").trim();
@@ -87,9 +89,11 @@ export async function POST(request: Request) {
 
   const matcher = getMatcher();
   let huellaVector: string;
+  const endExtract = startTimer();
   try {
     huellaVector = await matcher.extractFeatures(huellaBuffer);
   } catch (error) {
+    logMetric("hash_huella", { route: "POST /api/huellas-desconocidas", fase: "extract", ok: false, duration_ms: endExtract() });
     return NextResponse.json(
       {
         error:
@@ -100,6 +104,7 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  logMetric("hash_huella", { route: "POST /api/huellas-desconocidas", fase: "extract", ok: true, duration_ms: endExtract() });
 
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_huellas_desconocidas")
@@ -127,6 +132,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ huellaDesconocida: inserted, candidatos: [] });
   }
 
+  const endCompare = startTimer();
   const candidatos = [];
   for (const familiar of familiares ?? []) {
     const otroVector = await getOrComputeVector(
@@ -140,6 +146,13 @@ export async function POST(request: Request) {
     candidatos.push({ familiar, score });
   }
   candidatos.sort((a, b) => b.score - a.score);
+  logMetric("hash_huella", {
+    route: "POST /api/huellas-desconocidas",
+    fase: "compare",
+    comparaciones: familiares?.length ?? 0,
+    duration_ms: endCompare(),
+  });
 
+  logMetric("endpoint", { route: "POST /api/huellas-desconocidas", duration_ms: endTotal() });
   return NextResponse.json({ huellaDesconocida: inserted, candidatos });
 }

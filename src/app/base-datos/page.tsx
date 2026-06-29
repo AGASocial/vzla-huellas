@@ -103,7 +103,7 @@ export default function BaseDatosPage() {
           {resultados.map((resultado) => (
             <li key={resultado.id}>
               <Link
-                href={`/familiares/${resultado.id}/candidatos`}
+                href={`/familiares/${resultado.id}/candidatos?origen=base-datos`}
                 className="rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-4 flex items-center gap-3"
               >
                 <Image

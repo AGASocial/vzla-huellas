@@ -59,7 +59,7 @@ export function ConfirmarMatchForm({
       className="flex flex-col gap-3 mt-3 border-t border-[var(--gris-claro)] pt-3"
     >
       <label className="flex flex-col gap-1 text-sm text-[var(--gris)]">
-        Dirección actual del desconocido
+        Dirección actual de la persona desaparecida
         <input
           value={direccion}
           onChange={(event) => setDireccion(event.target.value)}
@@ -69,7 +69,7 @@ export function ConfirmarMatchForm({
       </label>
 
       <fieldset className="flex flex-col gap-2 text-sm text-[var(--gris)]">
-        Estado de la persona desaparecida
+        Estado de la persona desaparecida (con vida o fallecido)
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"

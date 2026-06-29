@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { ConfirmarMatchForm } from "@/components/ConfirmarMatchForm";
 import { BackButton } from "@/components/BackButton";
@@ -20,6 +20,8 @@ type Candidato = { huellaDesconocida: HuellaDesconocida; score: number };
 
 export default function CandidatosFamiliarPage() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const allowConfirm = searchParams.get("origen") === "base-datos";
   const [huellaUrl, setHuellaUrl] = useState<string | null>(null);
   const [nombre, setNombre] = useState<string | null>(null);
   const [numeroDocumento, setNumeroDocumento] = useState<string | null>(null);
@@ -72,11 +74,14 @@ export default function CandidatosFamiliarPage() {
       <div>
         <div className="flex items-center gap-3 mb-1">
           <BackButton href="/" />
-          <h1 className="text-2xl font-display">Registro guardado</h1>
+          <h1 className="text-2xl font-display">
+            {allowConfirm ? "Posibles coincidencias" : "Registro guardado"}
+          </h1>
         </div>
         <p className="text-[var(--gris)] text-sm">
-          Estas son las huellas digitales registradas hasta ahora. Compara
-          visualmente con la huella de {nombre ?? "tu familiar"}.
+          {allowConfirm
+            ? "Compara visualmente la huella registrada con las huellas escaneadas en el terreno."
+            : `Estas son las huellas digitales registradas hasta ahora. Compara visualmente con la huella de ${nombre ?? "tu familiar"}. Para confirmar una coincidencia, búscala en "Ver base de datos".`}
         </p>
       </div>
 
@@ -157,20 +162,21 @@ export default function CandidatosFamiliarPage() {
               </div>
             </div>
 
-            {abierto !== huellaDesconocida.id ? (
-              <button
-                onClick={() => setAbierto(huellaDesconocida.id)}
-                className="rounded-lg border border-[var(--verde-ok)] text-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/10 py-2 text-sm font-semibold"
-              >
-                Es esta persona — confirmar coincidencia
-              </button>
-            ) : (
-              <ConfirmarMatchForm
-                huellaDesconocidaId={huellaDesconocida.id}
-                familiarId={params.id}
-                onConfirmado={setConfirmado}
-              />
-            )}
+            {allowConfirm &&
+              (abierto !== huellaDesconocida.id ? (
+                <button
+                  onClick={() => setAbierto(huellaDesconocida.id)}
+                  className="rounded-lg border border-[var(--verde-ok)] text-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/10 py-2 text-sm font-semibold"
+                >
+                  Es esta persona — confirmar coincidencia
+                </button>
+              ) : (
+                <ConfirmarMatchForm
+                  huellaDesconocidaId={huellaDesconocida.id}
+                  familiarId={params.id}
+                  onConfirmado={setConfirmado}
+                />
+              ))}
           </li>
         ))}
       </ul>
