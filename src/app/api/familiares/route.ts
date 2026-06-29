@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { createServerClient } from "@/lib/supabase-server";
+import { createServiceRoleClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { normalizeToJpeg } from "@/lib/normalize-image";
 import { parseMultipart, UploadDemasiadoGrandeError } from "@/lib/parse-multipart";
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "El correo no tiene un formato válido" }, { status: 400 });
   }
 
-  const supabase = createServerClient();
+  const supabase = createServiceRoleClient();
 
   let huellaBuffer: Buffer;
   try {
