@@ -42,6 +42,13 @@ export default function RootLayout({
             confirmarse con autoridades, Cruz Roja u organismos forenses
             competentes antes de actuar.
           </p>
+          <p className="text-white/80 text-xs mt-3">
+            Este es un servicio de ayuda humanitaria, gratuito y sin fines de
+            lucro.
+          </p>
+          <p className="text-white/60 text-xs mt-1">
+            Realizado por Alejandro Trujillo y Gabriel Vega
+          </p>
           <p className="text-[var(--amarillo)]/60 text-xs mt-2">
             Versión: {APP_VERSION}
           </p>
