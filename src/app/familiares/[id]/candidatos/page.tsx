@@ -101,33 +101,37 @@ export default function CandidatosFamiliarPage() {
       </div>
 
       {nombre && (
-        <div className="rounded-lg bg-white border border-[var(--gris-claro)] p-3">
-          <p className="text-sm text-[var(--gris)]">Buscando a</p>
-          <p className="font-semibold">
-            {nombre}
-            {numeroDocumento && numeroDocumento.length >= 4 && (
-              <span className="text-[var(--gris)] font-normal">
-                {" "}
-                - doc. terminado en {numeroDocumento.slice(-4)}
-              </span>
-            )}
-          </p>
-          {fechaCreado && (
-            <p className="text-sm text-[var(--gris)]">
-              Registro creado el {formatearFecha(fechaCreado)}
-            </p>
+        <div className="rounded-lg bg-white border border-[var(--gris-claro)] p-3 flex items-center gap-3">
+          {huellaUrl && (
+            <Image
+              src={huellaUrl}
+              alt="Huella registrada"
+              width={128}
+              height={128}
+              className="rounded-lg w-32 h-32 object-cover shrink-0"
+            />
           )}
+          <div>
+            <p className="text-sm text-[var(--gris)]">Buscando a</p>
+            <p className="font-semibold">
+              {nombre}
+              {numeroDocumento && numeroDocumento.length >= 4 && (
+                <span className="text-[var(--gris)] font-normal">
+                  {" "}
+                  - doc. terminado en {numeroDocumento.slice(-4)}
+                </span>
+              )}
+            </p>
+            {fechaCreado && (
+              <p className="text-sm text-[var(--gris)]">
+                Registro creado el {formatearFecha(fechaCreado)}
+              </p>
+            )}
+          </div>
         </div>
       )}
 
       {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
-
-      {huellaUrl && (
-        <div>
-          <p className="text-sm text-[var(--gris)] mb-1">Huella registrada</p>
-          <Image src={huellaUrl} alt="Huella registrada" width={128} height={128} className="rounded-lg w-32 h-auto" />
-        </div>
-      )}
 
       {candidatos === null && !error && (
         <div className="flex items-center gap-3 text-[var(--gris)]">
