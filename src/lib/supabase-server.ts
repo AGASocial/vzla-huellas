@@ -9,7 +9,7 @@ export function createServerClient() {
       global: {
         // Next.js parchea `globalThis.fetch` para agregar su Data Cache, y
         // esa capa corrompió los uploads binarios a Supabase Storage en
-        // producción (Vercel) — el archivo perdía sus primeros bytes,
+        // producción (Vercel) - el archivo perdía sus primeros bytes,
         // reemplazados por el carácter de reemplazo UTF-8. Pasar
         // `cache: "no-store"` al fetch parcheado NO lo arregló, así que
         // usamos `undici` importado directamente: es una referencia a la

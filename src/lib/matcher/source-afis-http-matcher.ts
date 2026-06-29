@@ -46,4 +46,8 @@ export class SourceAfisHttpMatcher implements FingerprintMatcher {
     const score = Math.max(0, Math.min(100, data.score));
     return Math.round(score * 10) / 10;
   }
+
+  matcherVersion(): string {
+    return "source-afis-v1";
+  }
 }

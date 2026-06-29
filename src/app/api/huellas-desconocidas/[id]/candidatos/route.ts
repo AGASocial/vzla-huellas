@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { getOrComputeVector } from "@/lib/matcher/get-or-compute-vector";
+import { getOrComputeMatches } from "@/lib/matcher/get-or-compute-matches";
 import { startTimer, logMetric } from "@/lib/timing";
 
 export async function GET(
@@ -39,8 +40,11 @@ export async function GET(
   );
 
   const endCompare = startTimer();
-  const candidatos = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let candidatos: { familiar: any; score: number }[] = [];
   if (huellaVector) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const conVector: { familiar: any; vector: string }[] = [];
     for (const familiar of familiares ?? []) {
       const otroVector = await getOrComputeVector(
         supabase,
@@ -48,11 +52,24 @@ export async function GET(
         familiar,
         matcher
       );
-      if (!otroVector) continue;
-      const score = await matcher.compareFeatures(huellaVector, otroVector);
-      candidatos.push({ familiar, score });
+      if (otroVector) conVector.push({ familiar, vector: otroVector });
     }
+
+    const scores = await getOrComputeMatches(
+      supabase,
+      matcher,
+      "huella",
+      id,
+      huellaVector,
+      conVector.map(({ familiar, vector }) => ({ id: familiar.id, vector }))
+    );
+
+    candidatos = conVector.map(({ familiar }) => ({
+      familiar,
+      score: scores.get(familiar.id) ?? 0,
+    }));
   }
+  candidatos = candidatos.filter(({ score }) => score > 1);
   candidatos.sort((a, b) => b.score - a.score);
   logMetric("hash_huella", {
     route: "GET /api/huellas-desconocidas/[id]/candidatos",

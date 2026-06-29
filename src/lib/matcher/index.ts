@@ -8,7 +8,7 @@ export type { FingerprintMatcher };
  * Punto único de selección del motor de matching.
  * Si AFIS_SERVICE_URL está configurada, usa el motor real (SourceAFIS, por
  * minucias). Si no, cae en la similitud de imagen simple (NO confiable para
- * distinguir huellas digitales — ver advertencia en SimpleImageMatcher).
+ * distinguir huellas digitales - ver advertencia en SimpleImageMatcher).
  */
 export function getMatcher(): FingerprintMatcher {
   const afisUrl = process.env.AFIS_SERVICE_URL;

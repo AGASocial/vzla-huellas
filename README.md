@@ -4,7 +4,7 @@ Herramienta humanitaria para ayudar a reencontrar familias en Venezuela
 mediante registro y comparación visual de huellas digitales.
 
 > **Importante:** sin el microservicio `services/afis-matcher` configurado
-> (ver abajo), la comparación cae en similitud de imagen simple — que NO
+> (ver abajo), la comparación cae en similitud de imagen simple - que NO
 > distingue huellas de forma confiable (probado: dedos distintos dan
 > >88% de "similitud"). Configura `AFIS_SERVICE_URL` para matching real por
 > minucias. Aun con eso, todo match debe confirmarse con autoridades, Cruz
@@ -26,7 +26,7 @@ mediante registro y comparación visual de huellas digitales.
      nombre/teléfono del familiar, formato de número de documento) no puedan
      quedar vacíos o con datos inválidos directamente en la base de datos.
    - `0003_add_huella_vector.sql` agrega la columna `huella_vector` (ver
-     sección de costos abajo — clave para que el matching escale).
+     sección de costos abajo - clave para que el matching escale).
 3. Copia las credenciales del proyecto (Settings → API) a `.env.local`:
 
    ```
@@ -43,17 +43,17 @@ mediante registro y comparación visual de huellas digitales.
 
 ## Estructura
 
-- `/` — pantalla principal con los 3 botones (registrar familiar, escanear
+- `/` - pantalla principal con los 3 botones (registrar familiar, escanear
   huella, ver galería de huellas sin identificar).
-- `/familiares/nuevo` — formulario de registro de persona desaparecida.
-- `/escanear` — captura de huella desconocida (cámara o subir imagen).
-- `/candidatos` — galería pública de huellas sin identificar.
-- `src/lib/matcher` — motor de comparación de huellas, intercambiable.
+- `/familiares/nuevo` - formulario de registro de persona desaparecida.
+- `/escanear` - captura de huella desconocida (cámara o subir imagen).
+- `/candidatos` - galería pública de huellas sin identificar.
+- `src/lib/matcher` - motor de comparación de huellas, intercambiable.
   `getMatcher()` usa `SourceAfisHttpMatcher` (matching real por minucias, vía
   el microservicio en `services/afis-matcher`) si `AFIS_SERVICE_URL` está
   configurada; si no, cae en `SimpleImageMatcher` (similitud de imagen, NO
-  confiable — ver advertencia arriba).
-- `services/afis-matcher` — microservicio Java standalone con
+  confiable - ver advertencia arriba).
+- `services/afis-matcher` - microservicio Java standalone con
   [SourceAFIS](https://sourceafis.machinezoo.com/), el motor real de
   matching por minucias. Ver su propio `README.md` para correrlo en local o
   desplegarlo (Fly.io o Render). Una vez desplegado, copia su URL pública a
@@ -81,7 +81,7 @@ hacen sobre esos vectores ya guardados, sin volver a descargar ni reprocesar
 imágenes desde Storage.
 
 Esto importa porque sin esta optimización, cada registro nuevo dispararía
-una descarga + reprocesamiento de **todas** las imágenes del lado opuesto —
+una descarga + reprocesamiento de **todas** las imágenes del lado opuesto -
 el costo de egress y cómputo crecería con el cuadrado del número de
 registros. Con el vector precalculado, el costo crece linealmente: más
 usuarios = más storage (barato y predecible), pero el matching en sí no

@@ -3,7 +3,7 @@
  * `supabase-js`.
  *
  * Por qué: en producción (Vercel), `supabase.storage.from(...).upload()`
- * corrompía archivos binarios — confirmado con pruebas paso a paso (ver
+ * corrompía archivos binarios - confirmado con pruebas paso a paso (ver
  * historial de /api/debug-raw): el buffer llegaba intacto hasta justo antes
  * de esa llamada, y salía corrupto después. Una subida manual con `fetch` al
  * mismo endpoint, con el mismo buffer, no se corrompe. La causa exacta

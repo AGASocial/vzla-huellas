@@ -10,4 +10,12 @@ export interface FingerprintMatcher {
 
   /** Devuelve un score de similitud comparando dos features ya extraídos. */
   compareFeatures(featuresA: string, featuresB: string): Promise<number>;
+
+  /**
+   * Identificador del motor + versión usados para comparar (ej.
+   * "source-afis-v1", "simple-image-v1"). Se guarda junto a cada score en
+   * caché (vzla_huellas_matches) para poder invalidar resultados viejos si
+   * el motor cambia, sin tener que adivinar qué filas son obsoletas.
+   */
+  matcherVersion(): string;
 }

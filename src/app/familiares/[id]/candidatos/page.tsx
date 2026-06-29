@@ -14,9 +14,23 @@ type HuellaDesconocida = {
   estado: string | null;
   latitud: number | null;
   longitud: number | null;
+  created_at: string;
 };
 
 type Candidato = { huellaDesconocida: HuellaDesconocida; score: number };
+
+function formatearFecha(fechaIso: string) {
+  return new Date(fechaIso).toLocaleString("es-VE", {
+    timeZone: "America/Caracas",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).replace(",", "");
+}
 
 export default function CandidatosFamiliarPage() {
   const params = useParams<{ id: string }>();
@@ -25,6 +39,7 @@ export default function CandidatosFamiliarPage() {
   const [huellaUrl, setHuellaUrl] = useState<string | null>(null);
   const [nombre, setNombre] = useState<string | null>(null);
   const [numeroDocumento, setNumeroDocumento] = useState<string | null>(null);
+  const [fechaCreado, setFechaCreado] = useState<string | null>(null);
   const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
   const [abierto, setAbierto] = useState<string | null>(null);
   const [confirmado, setConfirmado] = useState<{
@@ -44,12 +59,12 @@ export default function CandidatosFamiliarPage() {
         setHuellaUrl(data.familiar.huella_url);
         setNombre(data.familiar.nombre_completo);
         setNumeroDocumento(data.familiar.numero_documento);
+        setFechaCreado(data.familiar.created_at);
         setCandidatos(data.candidatos);
       })
       .catch(() => setError("No se pudo cargar la información."));
   }, [params.id]);
 
-  const candidatosVisibles = (candidatos ?? []).filter(({ score }) => score > 1);
 
   if (confirmado) {
     return (
@@ -93,10 +108,15 @@ export default function CandidatosFamiliarPage() {
             {numeroDocumento && numeroDocumento.length >= 4 && (
               <span className="text-[var(--gris)] font-normal">
                 {" "}
-                — doc. terminado en {numeroDocumento.slice(-4)}
+                - doc. terminado en {numeroDocumento.slice(-4)}
               </span>
             )}
           </p>
+          {fechaCreado && (
+            <p className="text-sm text-[var(--gris)]">
+              Registro creado el {formatearFecha(fechaCreado)}
+            </p>
+          )}
         </div>
       )}
 
@@ -116,7 +136,7 @@ export default function CandidatosFamiliarPage() {
         </div>
       )}
 
-      {candidatos !== null && candidatosVisibles.length === 0 && (
+      {candidatos !== null && (candidatos ?? []).length === 0 && (
         <p className="text-[var(--gris)]">
           No hay huellas digitales registradas todavía. Si alguien escanea
           una huella en el futuro, se comparará automáticamente con este
@@ -125,7 +145,7 @@ export default function CandidatosFamiliarPage() {
       )}
 
       <ul className="flex flex-col gap-4">
-        {candidatosVisibles.map(({ huellaDesconocida, score }) => (
+        {(candidatos ?? []).map(({ huellaDesconocida, score }) => (
           <li
             key={huellaDesconocida.id}
             className="rounded-xl bg-white border border-[var(--gris-claro)] p-4 flex flex-col gap-2"
@@ -164,6 +184,9 @@ export default function CandidatosFamiliarPage() {
                     {huellaDesconocida.observaciones}
                   </p>
                 )}
+                <p className="text-sm text-[var(--gris)] mt-1">
+                  Registro creado el {formatearFecha(huellaDesconocida.created_at)}
+                </p>
               </div>
             </div>
 
@@ -173,7 +196,7 @@ export default function CandidatosFamiliarPage() {
                   onClick={() => setAbierto(huellaDesconocida.id)}
                   className="rounded-lg border border-[var(--verde-ok)] text-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/10 py-2 text-sm font-semibold"
                 >
-                  Es esta persona — confirmar coincidencia
+                  Es esta persona - confirmar coincidencia
                 </button>
               ) : (
                 <ConfirmarMatchForm

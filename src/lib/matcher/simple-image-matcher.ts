@@ -17,7 +17,7 @@ function cosineSimilarity(a: number[], b: number[]): number {
 }
 
 /**
- * Comparación por similitud de imagen (NO es matching biométrico real — ver
+ * Comparación por similitud de imagen (NO es matching biométrico real - ver
  * SourceAfisHttpMatcher para eso). Da scores altos entre dedos distintos
  * porque toda foto de huella se ve "globalmente parecida" (mancha oscura
  * ovalada sobre papel claro). Útil solo como filtro de emergencia mientras
@@ -40,5 +40,9 @@ export class SimpleImageMatcher implements FingerprintMatcher {
     const similarity = cosineSimilarity(vecA, vecB);
     const score = Math.max(0, Math.min(1, similarity)) * 100;
     return Math.round(score * 10) / 10;
+  }
+
+  matcherVersion(): string {
+    return "simple-image-v1";
   }
 }

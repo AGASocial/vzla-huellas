@@ -11,7 +11,7 @@ type ParsedMultipart = {
  * sin pasar por `Request.formData()`.
  *
  * Por qué: en producción (Vercel), `request.formData()` corrompió archivos
- * binarios — el archivo subido llegaba a Storage con los primeros bytes
+ * binarios - el archivo subido llegaba a Storage con los primeros bytes
  * reemplazados por el carácter de reemplazo UTF-8 (�), señal de que el
  * parser interno decodificó el body como texto en algún punto. Esto no
  * ocurría en `next dev`, solo en el build de producción. Parsear nosotros

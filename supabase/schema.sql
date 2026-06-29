@@ -1,6 +1,6 @@
 -- El esquema ahora vive en supabase/migrations/, en orden:
---   0001_init.sql                     — tablas, RLS, buckets de Storage
---   0002_enforce_required_fields.sql  — NOT NULL + CHECK para los campos
+--   0001_init.sql                     - tablas, RLS, buckets de Storage
+--   0002_enforce_required_fields.sql  - NOT NULL + CHECK para los campos
 --                                        obligatorios del formulario
 --
 -- Ejecuta cada archivo en orden en el SQL Editor de Supabase (o usa

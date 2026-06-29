@@ -11,8 +11,8 @@ umbral sugerido es 40). Ver `Main.SOURCEAFIS_THRESHOLD`.
 ## Endpoints
 
 - `GET /health` → `ok`
-- `POST /extract` — body: bytes crudos de la imagen → `{ "template": "<base64>" }`
-- `POST /compare` — body: `{ "probe": "<base64>", "candidate": "<base64>" }` →
+- `POST /extract` - body: bytes crudos de la imagen → `{ "template": "<base64>" }`
+- `POST /compare` - body: `{ "probe": "<base64>", "candidate": "<base64>" }` →
   `{ "score": number, "threshold": 40, "match": boolean }`
 
 Si se define la variable de entorno `AFIS_TOKEN`, todos los endpoints

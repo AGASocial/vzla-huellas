@@ -35,7 +35,7 @@ const version = `${packageJson.version}-${commitCount}+${commitHash}`;
 
 writeFileSync(
   join(__dirname, "../src/lib/version.ts"),
-  `// Generado automáticamente por scripts/generate-version.mjs — no editar a mano.\nexport const APP_VERSION = "${version}";\nexport const APP_COMMIT_SHA = "${fullSha}";\n`
+  `// Generado automáticamente por scripts/generate-version.mjs - no editar a mano.\nexport const APP_VERSION = "${version}";\nexport const APP_COMMIT_SHA = "${fullSha}";\n`
 );
 
 console.log(`Versión generada: ${version}`);

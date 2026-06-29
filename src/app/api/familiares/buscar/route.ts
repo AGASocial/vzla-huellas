@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const { data, error } = await supabase
     .from("vzla_huellas_familiares_buscados")
     .select(
-      "id, nombre_completo, tipo_documento, numero_documento, huella_url, matches:vzla_huellas_huellas_desconocidas(id)"
+      "id, nombre_completo, tipo_documento, numero_documento, huella_url, matches:vzla_huellas_huellas_desconocidas!match_confirmado_id(id)"
     )
     .or(
       `nombre_completo.ilike.${patron},numero_documento.ilike.${patron},correo.ilike.${patron},telefono.ilike.${patron},telefono_familiar.ilike.${patron}`

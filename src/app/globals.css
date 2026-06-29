@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Paleta Venezuela — usada vía arbitrary values de Tailwind, ej. bg-[var(--azul)].
+/* Paleta Venezuela - usada vía arbitrary values de Tailwind, ej. bg-[var(--azul)].
    El color de fondo real lo da la clase bg-[var(--fondo)] en <body> (layout.tsx). */
 :root {
   --rojo: #cf142b;

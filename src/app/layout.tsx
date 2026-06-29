@@ -16,7 +16,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Reencuentro — Registro y comparación de huellas",
+  title: "Reencuentro - Registro y comparación de huellas",
   description: "Herramienta humanitaria para reencontrar familias en Venezuela",
 };
 
