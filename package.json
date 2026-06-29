@@ -1,6 +1,7 @@
 {
   "name": "vzla-huellas",
   "version": "1.0.0",
+  "buildNumber": 34,
   "private": true,
   "scripts": {
     "predev": "node scripts/generate-version.mjs",
