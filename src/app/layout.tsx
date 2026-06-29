@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Space_Grotesk, DM_Sans } from "next/font/google";
 import { APP_VERSION, APP_COMMIT_SHA } from "@/lib/version";
 import "./globals.css";
@@ -53,6 +54,7 @@ export default function RootLayout({
             Versión: {APP_VERSION}
           </p>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
