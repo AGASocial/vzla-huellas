@@ -13,7 +13,11 @@ primary_region = 'dfw'
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 0
+  # En 0 las 2 máquinas se apagan sin tráfico y el primer request paga el
+  # cold start de la JVM (varios segundos) — riesgoso bajo un pico de
+  # lanzamiento. En 2 quedan las dos siempre prendidas, sin cold start,
+  # repartiendo carga entre ambas.
+  min_machines_running = 2
 
 [[vm]]
   memory = '512mb'

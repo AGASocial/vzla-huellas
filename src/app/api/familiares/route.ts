@@ -3,13 +3,23 @@ import { randomUUID } from "crypto";
 import { createServerClient } from "@/lib/supabase-server";
 import { getMatcher } from "@/lib/matcher";
 import { normalizeToJpeg } from "@/lib/normalize-image";
-import { parseMultipart } from "@/lib/parse-multipart";
+import { parseMultipart, UploadDemasiadoGrandeError } from "@/lib/parse-multipart";
 import { uploadToStorage } from "@/lib/storage-upload";
 import { startTimer, logMetric } from "@/lib/timing";
 
 export async function POST(request: Request) {
   const endTotal = startTimer();
-  const { fields, file } = await parseMultipart(request);
+
+  let fields: Record<string, string>;
+  let file: { buffer: Buffer; filename: string; mimeType: string } | null;
+  try {
+    ({ fields, file } = await parseMultipart(request));
+  } catch (error) {
+    if (error instanceof UploadDemasiadoGrandeError) {
+      return NextResponse.json({ error: error.message }, { status: 413 });
+    }
+    throw error;
+  }
 
   if (!file) {
     return NextResponse.json({ error: "Falta la imagen de la huella" }, { status: 400 });
