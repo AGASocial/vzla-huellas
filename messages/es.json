@@ -87,7 +87,8 @@
     "error_cargar": "No se pudo cargar la información.",
     "score_label": "Puntaje: {score}%",
     "huella_registrada_alt": "Huella registrada",
-    "huella_desconocida_alt": "Huella desconocida"
+    "huella_desconocida_alt": "Huella desconocida",
+    "tu_familiar": "tu familiar"
   },
   "candidatos_huella": {
     "title": "Posibles coincidencias",

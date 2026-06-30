@@ -87,7 +87,8 @@
     "error_cargar": "Could not load the information.",
     "score_label": "Score: {score}%",
     "huella_registrada_alt": "Registered fingerprint",
-    "huella_desconocida_alt": "Unknown fingerprint"
+    "huella_desconocida_alt": "Unknown fingerprint",
+    "tu_familiar": "your family member"
   },
   "candidatos_huella": {
     "title": "Possible matches",

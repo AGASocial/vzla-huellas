@@ -98,8 +98,8 @@ export default function CandidatosFamiliarPage() {
         <p className="text-[var(--gris)] text-sm">
           {allowConfirm
             ? t("subtitle_confirm")
-            : nombre
-            ? t("subtitle_readonly", { nombre })
+            : true
+            ? t("subtitle_readonly", { nombre: nombre ?? t("tu_familiar") })
             : null}
         </p>
       </div>
