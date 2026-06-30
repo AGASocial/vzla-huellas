@@ -1,9 +1,12 @@
 import Busboy from "busboy";
 import { Readable } from "stream";
 
+type FileEntry = { buffer: Buffer; filename: string; mimeType: string };
+
 type ParsedMultipart = {
   fields: Record<string, string>;
-  file: { buffer: Buffer; filename: string; mimeType: string } | null;
+  file: FileEntry | null;
+  extraFiles: Record<string, FileEntry>;
 };
 
 // Límite generoso para una foto de celular (incluso en alta resolución),
@@ -47,6 +50,7 @@ export async function parseMultipart(request: Request): Promise<ParsedMultipart>
     });
     const fields: Record<string, string> = {};
     let file: ParsedMultipart["file"] = null;
+    const extraFiles: ParsedMultipart["extraFiles"] = {};
     let truncado = false;
 
     busboy.on("field", (name, value) => {
@@ -60,12 +64,16 @@ export async function parseMultipart(request: Request): Promise<ParsedMultipart>
         truncado = true;
       });
       stream.on("end", () => {
-        if (name === "huella" && !truncado) {
-          file = {
-            buffer: Buffer.concat(chunks),
-            filename: info.filename,
-            mimeType: info.mimeType,
-          };
+        if (truncado) return;
+        const entry: FileEntry = {
+          buffer: Buffer.concat(chunks),
+          filename: info.filename,
+          mimeType: info.mimeType,
+        };
+        if (name === "huella") {
+          file = entry;
+        } else {
+          extraFiles[name] = entry;
         }
       });
     });
@@ -75,7 +83,7 @@ export async function parseMultipart(request: Request): Promise<ParsedMultipart>
         reject(new UploadDemasiadoGrandeError());
         return;
       }
-      resolve({ fields, file });
+      resolve({ fields, file, extraFiles });
     });
     busboy.on("error", reject);
 

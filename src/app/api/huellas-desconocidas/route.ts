@@ -41,8 +41,9 @@ export async function POST(request: Request) {
 
   let fields: Record<string, string>;
   let file: { buffer: Buffer; filename: string; mimeType: string } | null;
+  let extraFiles: Record<string, { buffer: Buffer; filename: string; mimeType: string }>;
   try {
-    ({ fields, file } = await parseMultipart(request));
+    ({ fields, file, extraFiles } = await parseMultipart(request));
   } catch (error) {
     if (error instanceof UploadDemasiadoGrandeError) {
       return NextResponse.json({ error: error.message }, { status: 413 });
@@ -116,6 +117,28 @@ export async function POST(request: Request) {
   }
   logMetric("hash_huella", { route: "POST /api/huellas-desconocidas", fase: "extract", ok: true, duration_ms: endExtract() });
 
+  const etiquetaFile = extraFiles?.etiqueta ?? null;
+  let etiquetaUrl: string | null = null;
+  if (etiquetaFile) {
+    let etiquetaBuffer: Buffer;
+    try {
+      etiquetaBuffer = await normalizeToJpeg(etiquetaFile.buffer);
+    } catch {
+      return NextResponse.json({ error: "No se pudo procesar la imagen de la etiqueta." }, { status: 400 });
+    }
+    const etiquetaFileName = `etiqueta-${randomUUID()}.jpg`;
+    const etiquetaUpload = await uploadToStorage(
+      "vzla_huellas_desconocidas",
+      etiquetaFileName,
+      etiquetaBuffer,
+      "image/jpeg"
+    );
+    if ("error" in etiquetaUpload) {
+      return NextResponse.json({ error: etiquetaUpload.error }, { status: 500 });
+    }
+    etiquetaUrl = etiquetaUpload.publicUrl;
+  }
+
   const { data: inserted, error: insertError } = await supabase
     .from("vzla_huellas_huellas_desconocidas")
     .insert({
@@ -126,6 +149,7 @@ export async function POST(request: Request) {
       estado: estado || null,
       latitud,
       longitud,
+      etiqueta_url: etiquetaUrl,
     })
     .select()
     .single();
