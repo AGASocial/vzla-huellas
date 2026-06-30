@@ -132,14 +132,18 @@
   "guia": {
     "title": "Collaborator guide",
     "gracias": "Dear Collaborator, thank you in advance for helping us with this work",
-    "materiales": "To complete this process you need an ink pad or a black permanent marker and a blank sheet of paper.",
+    "materiales": "To complete this process you need an <strong>ink pad</strong> or a <strong>black permanent marker</strong> and a blank sheet of paper.",
     "pasos_titulo": "Steps to follow",
-    "paso1": "Clean the RIGHT THUMB of the unknown person.",
+    "paso1": "Clean the <strong>RIGHT THUMB</strong> of the unknown person.",
     "paso2": "Apply ink with the ink pad or marker to the clean finger (note: do not use too much ink so the fingerprint stays legible).",
     "paso3": "Press the finger gently onto the paper surface, as shown in the example below.",
     "paso4": "Take a photo of the fingerprint with your phone camera. See the example below.",
     "no_mostrar": "Don't show again",
-    "empezar": "Let's start!"
+    "empezar": "Let's start!",
+    "paso0_alt": "Collaborator preparing ink and phone to photograph the fingerprint",
+    "paso3_img_alt": "Taking the fingerprint of the found person on a sheet of paper",
+    "paso4_img_alt": "Photographing the fingerprint with the phone camera",
+    "ejemplos_alt": "Fingerprint examples: one legible (correct) and two blurry (incorrect)"
   },
   "confirmar_match": {
     "label_direccion": "Current address of the missing person",

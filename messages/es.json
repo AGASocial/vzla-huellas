@@ -132,14 +132,18 @@
   "guia": {
     "title": "Guía para colaboradores",
     "gracias": "Amigo Colaborador, gracias de antemano por ayudarnos con esta labor",
-    "materiales": "Para realizar este proceso debes tener un huellero o un marcador permanente negro y una hoja de papel en blanco.",
+    "materiales": "Para realizar este proceso debes tener un <strong>huellero</strong> o un <strong>marcador permanente negro</strong> y una hoja de papel en blanco.",
     "pasos_titulo": "Pasos a seguir",
-    "paso1": "Limpia el PULGAR DERECHO de la persona desconocida.",
+    "paso1": "Limpia el <strong>PULGAR DERECHO</strong> de la persona desconocida.",
     "paso2": "Colócale tinta con el huellero o con el marcador al dedo limpio (nota: no te excedas con la tinta para que la huella quede legible).",
     "paso3": "Coloca el dedo en la superficie de la hoja sin presionar mucho, tal como se muestra en el ejemplo abajo.",
     "paso4": "Toma una fotografía de la huella con la cámara del teléfono. Observa el ejemplo a continuación.",
     "no_mostrar": "No mostrar esto de nuevo",
-    "empezar": "¡Listo! Ahora puede empezar"
+    "empezar": "¡Listo! Ahora puede empezar",
+    "paso0_alt": "Colaborador preparando tinta y teléfono para fotografiar la huella",
+    "paso3_img_alt": "Tomando la huella de la persona encontrada sobre una hoja de papel",
+    "paso4_img_alt": "Fotografiando la huella con la cámara del teléfono",
+    "ejemplos_alt": "Ejemplos de huellas: una legible (correcta) y dos borrosas (incorrectas)"
   },
   "confirmar_match": {
     "label_direccion": "Dirección actual de la persona desaparecida",
