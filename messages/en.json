@@ -85,7 +85,9 @@
     "coincidencia_title": "Match confirmed!",
     "coincidencia_subtitle": "Contact the family to follow up:",
     "error_cargar": "Could not load the information.",
-    "score_label": "Score: {score}%"
+    "score_label": "Score: {score}%",
+    "huella_registrada_alt": "Registered fingerprint",
+    "huella_desconocida_alt": "Unknown fingerprint"
   },
   "candidatos_huella": {
     "title": "Possible matches",

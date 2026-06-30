@@ -85,7 +85,9 @@
     "coincidencia_title": "¡Coincidencia confirmada!",
     "coincidencia_subtitle": "Contacta a la familia para darle seguimiento:",
     "error_cargar": "No se pudo cargar la información.",
-    "score_label": "Puntaje: {score}%"
+    "score_label": "Puntaje: {score}%",
+    "huella_registrada_alt": "Huella registrada",
+    "huella_desconocida_alt": "Huella desconocida"
   },
   "candidatos_huella": {
     "title": "Posibles coincidencias",

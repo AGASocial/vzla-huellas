@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { ConfirmarMatchForm } from "@/components/ConfirmarMatchForm";
 import { BackButton } from "@/components/BackButton";
 
@@ -33,6 +34,7 @@ function formatearFecha(fechaIso: string) {
 }
 
 export default function CandidatosFamiliarPage() {
+  const t = useTranslations("candidatos_familiar");
   const params = useParams<{ id: string }>();
   const searchParams = useSearchParams();
   const allowConfirm = searchParams.get("origen") === "base-datos";
@@ -62,8 +64,8 @@ export default function CandidatosFamiliarPage() {
         setFechaCreado(data.familiar.created_at);
         setCandidatos(data.candidatos);
       })
-      .catch(() => setError("No se pudo cargar la información."));
-  }, [params.id]);
+      .catch(() => setError(t("error_cargar")));
+  }, [params.id, t]);
 
 
   if (confirmado) {
@@ -71,10 +73,10 @@ export default function CandidatosFamiliarPage() {
       <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <BackButton href="/" />
-          <h1 className="text-2xl font-display">¡Coincidencia confirmada!</h1>
+          <h1 className="text-2xl font-display">{t("coincidencia_title")}</h1>
         </div>
         <p className="text-[var(--gris)]">
-          Contacta a la familia para darle seguimiento:
+          {t("coincidencia_subtitle")}
         </p>
         <div className="rounded-lg bg-[var(--verde-ok)]/10 border border-[var(--verde-ok)]/30 p-4">
           <p className="font-semibold">{confirmado.nombre_contacto}</p>
@@ -90,13 +92,15 @@ export default function CandidatosFamiliarPage() {
         <div className="flex items-center gap-3 mb-1">
           <BackButton href="/" />
           <h1 className="text-2xl font-display">
-            {allowConfirm ? "Posibles coincidencias" : "Registro guardado"}
+            {allowConfirm ? t("title_confirm") : t("title_readonly")}
           </h1>
         </div>
         <p className="text-[var(--gris)] text-sm">
           {allowConfirm
-            ? "Compara visualmente la huella registrada con las huellas escaneadas en el terreno."
-            : `Estas son las huellas digitales registradas hasta ahora. Compara visualmente con la huella de ${nombre ?? "tu familiar"}. Para confirmar una coincidencia, búscala en "Ver base de datos".`}
+            ? t("subtitle_confirm")
+            : nombre
+            ? t("subtitle_readonly", { nombre })
+            : null}
         </p>
       </div>
 
@@ -105,26 +109,26 @@ export default function CandidatosFamiliarPage() {
           {huellaUrl && (
             <Image
               src={huellaUrl}
-              alt="Huella registrada"
+              alt={t("huella_registrada_alt")}
               width={128}
               height={128}
               className="rounded-lg w-32 h-32 object-cover shrink-0"
             />
           )}
           <div>
-            <p className="text-sm text-[var(--gris)]">Buscando a</p>
+            <p className="text-sm text-[var(--gris)]">{t("buscando_a")}</p>
             <p className="font-semibold">
               {nombre}
               {numeroDocumento && numeroDocumento.length >= 4 && (
                 <span className="text-[var(--gris)] font-normal">
                   {" "}
-                  - doc. terminado en {numeroDocumento.slice(-4)}
+                  - {t("doc_termina_en", { digitos: numeroDocumento.slice(-4) })}
                 </span>
               )}
             </p>
             {fechaCreado && (
               <p className="text-sm text-[var(--gris)]">
-                Registro creado el {formatearFecha(fechaCreado)}
+                {t("registro_creado", { fecha: formatearFecha(fechaCreado) })}
               </p>
             )}
           </div>
@@ -136,15 +140,13 @@ export default function CandidatosFamiliarPage() {
       {candidatos === null && !error && (
         <div className="flex items-center gap-3 text-[var(--gris)]">
           <span className="inline-block w-4 h-4 rounded-full border-2 border-[var(--gris-claro)] border-t-[var(--azul)] animate-spin" />
-          <p>Buscando coincidencias... esto puede tardar un poco si hay muchos registros.</p>
+          <p>{t("spinner")}</p>
         </div>
       )}
 
       {candidatos !== null && (candidatos ?? []).length === 0 && (
         <p className="text-[var(--gris)]">
-          No hay huellas digitales registradas todavía. Si alguien escanea
-          una huella en el futuro, se comparará automáticamente con este
-          registro.
+          {t("sin_huellas")}
         </p>
       )}
 
@@ -157,19 +159,20 @@ export default function CandidatosFamiliarPage() {
             <div className="flex items-center gap-3">
               <Image
                 src={huellaDesconocida.huella_url}
-                alt="Huella desconocida"
+                alt={t("huella_desconocida_alt")}
                 width={64}
                 height={64}
                 className="rounded-lg w-16 h-16 object-cover"
               />
               <div>
-                <p className="text-sm text-[var(--gris)]">Score: {score}%</p>
+                <p className="text-sm text-[var(--gris)]">{t("score_label", { score })}</p>
                 {huellaDesconocida.direccion && (
                   <p className="text-sm text-[var(--oscuro)]">{huellaDesconocida.direccion}</p>
                 )}
                 {huellaDesconocida.estado && (
                   <p className="text-sm text-[var(--oscuro)]">
-                    Estado: {huellaDesconocida.estado === "fallecido" ? "Fallecido" : "Con vida"}
+                    {t("estado_label")}{" "}
+                    {huellaDesconocida.estado === "fallecido" ? t("estado_fallecido") : t("estado_con_vida")}
                   </p>
                 )}
                 {huellaDesconocida.latitud != null && huellaDesconocida.longitud != null && (
@@ -179,17 +182,17 @@ export default function CandidatosFamiliarPage() {
                     rel="noopener noreferrer"
                     className="text-sm text-[var(--azul)] underline"
                   >
-                    Ver ubicación del escaneo en Google Maps
+                    {t("ver_mapa")}
                   </a>
                 )}
                 {huellaDesconocida.observaciones && (
                   <p className="text-sm text-[var(--oscuro)] mt-1">
-                    <span className="text-[var(--gris)]">Observación: </span>
+                    <span className="text-[var(--gris)]">{t("observacion_label")} </span>
                     {huellaDesconocida.observaciones}
                   </p>
                 )}
                 <p className="text-sm text-[var(--gris)] mt-1">
-                  Registro creado el {formatearFecha(huellaDesconocida.created_at)}
+                  {t("registro_creado", { fecha: formatearFecha(huellaDesconocida.created_at) })}
                 </p>
               </div>
             </div>
@@ -200,7 +203,7 @@ export default function CandidatosFamiliarPage() {
                   onClick={() => setAbierto(huellaDesconocida.id)}
                   className="rounded-lg border border-[var(--verde-ok)] text-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/10 py-2 text-sm font-semibold"
                 >
-                  Es esta persona - confirmar coincidencia
+                  {t("confirmar_btn")}
                 </button>
               ) : (
                 <ConfirmarMatchForm
