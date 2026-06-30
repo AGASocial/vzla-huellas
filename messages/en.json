@@ -50,7 +50,8 @@
     "guardando": "Saving...",
     "error_sin_huella": "Please upload or take a photo of the fingerprint before saving.",
     "error_servidor": "Could not connect to the server.",
-    "error_generico": "An error occurred while saving."
+    "error_generico": "An error occurred while saving.",
+    "huella_preview_alt": "Selected fingerprint"
   },
   "base_datos": {
     "title": "Database",

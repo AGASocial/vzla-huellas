@@ -1,29 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { BackButton } from "@/components/BackButton";
 
 type TipoDocumento = "" | "V" | "E" | "pasaporte" | "sin_documento";
 
-const NUMERO_DOCUMENTO_CONFIG: Record<
-  TipoDocumento,
-  { placeholder: string; maxLength?: number; pattern?: string; inputMode?: "numeric" | "text" }
-> = {
-  "": { placeholder: "Selecciona primero el tipo de documento" },
-  V: { placeholder: "Ej: 12345678", maxLength: 8, pattern: "[0-9]{1,8}", inputMode: "numeric" },
-  E: { placeholder: "Ej: 12345678", maxLength: 8, pattern: "[0-9]{1,8}", inputMode: "numeric" },
-  pasaporte: {
-    placeholder: "Ej: A1234567",
-    maxLength: 9,
-    pattern: "[A-Za-z0-9]{1,9}",
-    inputMode: "text",
-  },
-  sin_documento: { placeholder: "Sin número de documento" },
-};
-
 export default function NuevoFamiliarPage() {
+  const t = useTranslations("familiares_nuevo");
   const router = useRouter();
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +19,22 @@ export default function NuevoFamiliarPage() {
   const [numeroDocumento, setNumeroDocumento] = useState("");
   const [huella, setHuella] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const NUMERO_DOCUMENTO_CONFIG: Record<
+    TipoDocumento,
+    { placeholder: string; maxLength?: number; pattern?: string; inputMode?: "numeric" | "text" }
+  > = {
+    "": { placeholder: t("placeholder_doc_deshabilitado") },
+    V: { placeholder: "Ej: 12345678", maxLength: 8, pattern: "[0-9]{1,8}", inputMode: "numeric" },
+    E: { placeholder: "Ej: 12345678", maxLength: 8, pattern: "[0-9]{1,8}", inputMode: "numeric" },
+    pasaporte: {
+      placeholder: "Ej: A1234567",
+      maxLength: 9,
+      pattern: "[A-Za-z0-9]{1,9}",
+      inputMode: "text",
+    },
+    sin_documento: { placeholder: t("placeholder_sin_doc") },
+  };
 
   const numeroDocumentoConfig = NUMERO_DOCUMENTO_CONFIG[tipoDocumento];
 
@@ -71,7 +73,7 @@ export default function NuevoFamiliarPage() {
     setError(null);
 
     if (!huella) {
-      setError("Sube o toma una foto de la huella antes de guardar.");
+      setError(t("error_sin_huella"));
       return;
     }
 
@@ -89,14 +91,14 @@ export default function NuevoFamiliarPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error ?? "Ocurrió un error al guardar.");
+        setError(data.error ?? t("error_generico"));
         setEnviando(false);
         return;
       }
 
       router.push(`/familiares/${data.familiar.id}/candidatos`);
     } catch {
-      setError("No se pudo conectar con el servidor.");
+      setError(t("error_servidor"));
       setEnviando(false);
     }
   }
@@ -105,7 +107,7 @@ export default function NuevoFamiliarPage() {
     <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10">
       <div className="flex items-center gap-3 mb-1">
         <BackButton />
-        <h1 className="text-2xl font-display">Sube los datos de tu familiar</h1>
+        <h1 className="text-2xl font-display">{t("title")}</h1>
       </div>
       {!previewUrl && (
         <div className="flex flex-col sm:flex-row gap-3 items-start bg-[#FFF9F0] border border-[var(--amarillo)]/40 rounded-lg p-3 mb-6">
@@ -117,11 +119,11 @@ export default function NuevoFamiliarPage() {
             className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
           />
           <p className="text-[#7a4f00] text-2xl">
-            <span className="text-green-900">Sigue al pie de la letra los pasos a continuacion:</span> La foto que vas a subir debe ser muy parecida a la del ejemplo. Usa la huella del <strong>dedo pulgar derecho</strong>, la misma
-            que aparece en la cédula de identidad. Toma la foto bien enfocada
-            y con buena luz, como en el ejemplo.
+            <span className="text-green-900">{t("example_note")}</span>{" "}
+            {t("example_body")}{" "}
             <br /><br />
-            <span className="text-green-900">Nota:</span> No subas una foto del documento completo, solo la huella digital.
+            <span className="text-green-900">{t("example_note2")}</span>{" "}
+            {t("example_body2")}
           </p>
         </div>
       )}
@@ -130,28 +132,28 @@ export default function NuevoFamiliarPage() {
         <div className="flex items-center gap-4 mb-6">
           <Image
             src={previewUrl}
-            alt="Huella seleccionada"
+            alt={t("huella_preview_alt")}
             width={96}
             height={96}
             unoptimized
             className="rounded-lg w-24 h-24 object-cover border border-[var(--verde-ok)]"
           />
           <div className="flex flex-col gap-2">
-            <p className="text-[var(--verde-ok)] text-2xl">Huella lista para guardar.</p>
+            <p className="text-[var(--verde-ok)] text-2xl">{t("huella_lista")}</p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
                 className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-md hover:border-[var(--oscuro)]/40"
               >
-                Tomar otra foto
+                {t("tomar_otra")}
               </button>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-md hover:border-[var(--oscuro)]/40"
               >
-                Subir otra imagen
+                {t("subir_otra")}
               </button>
             </div>
           </div>
@@ -163,9 +165,9 @@ export default function NuevoFamiliarPage() {
             onClick={() => fileInputRef.current?.click()}
             className="flex-1 rounded-xl bg-[var(--azul)] border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-5 text-left"
           >
-            <span className="text-lg text-white font-semibold block">Subir huella</span>
+            <span className="text-lg text-white font-semibold block">{t("subir_huella")}</span>
             <span className="text-white text-md">
-              Toma una foto con la cámara o selecciona una foto existente.
+              {t("subir_huella_desc")}
             </span>
           </button>
         </div>
@@ -187,11 +189,11 @@ export default function NuevoFamiliarPage() {
       />
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Campo label="Nombre completo de la persona">
+        <Campo label={t("label_nombre")}>
           <input name="nombre_completo" required className={inputClass} />
         </Campo>
 
-        <Campo label="Tipo de documento">
+        <Campo label={t("label_tipo_doc")}>
           <select
             name="tipo_documento"
             required
@@ -202,16 +204,16 @@ export default function NuevoFamiliarPage() {
             }
           >
             <option value="" disabled>
-              Selecciona...
+              {t("doc_selecciona")}
             </option>
-            <option value="V">Cédula V</option>
-            <option value="E">Cédula E</option>
-            <option value="pasaporte">Pasaporte</option>
-            <option value="sin_documento">Sin documento</option>
+            <option value="V">{t("doc_cedula_v")}</option>
+            <option value="E">{t("doc_cedula_e")}</option>
+            <option value="pasaporte">{t("doc_pasaporte")}</option>
+            <option value="sin_documento">{t("doc_sin_documento")}</option>
           </select>
         </Campo>
 
-        <Campo label="Número de documento">
+        <Campo label={t("label_numero_doc")}>
           <input
             name="numero_documento"
             value={numeroDocumento}
@@ -226,23 +228,23 @@ export default function NuevoFamiliarPage() {
           />
         </Campo>
 
-        <Campo label="Número de teléfono (opcional)">
+        <Campo label={t("label_telefono")}>
           <input name="telefono" className={inputClass} />
         </Campo>
 
-        <Campo label="Dirección donde se encuentra">
+        <Campo label={t("label_direccion")}>
           <input name="direccion" required className={inputClass} />
         </Campo>
 
-        <Campo label="Correo electrónico">
+        <Campo label={t("label_correo")}>
           <input name="correo" type="email" required className={inputClass} />
         </Campo>
 
-        <Campo label="Nombre del familiar que lo busca">
+        <Campo label={t("label_nombre_familiar")}>
           <input name="nombre_familiar" required className={inputClass} />
         </Campo>
 
-        <Campo label="Número del familiar que lo busca">
+        <Campo label={t("label_telefono_familiar")}>
           <input name="telefono_familiar" required className={inputClass} />
         </Campo>
 
@@ -253,7 +255,7 @@ export default function NuevoFamiliarPage() {
           disabled={enviando}
           className="sm:col-span-2 mt-2 rounded-lg bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 text-white disabled:opacity-50 py-3 font-display shadow-[0_4px_15px_rgba(26,138,90,0.3)]"
         >
-          {enviando ? "Guardando..." : "Guardar"}
+          {enviando ? t("guardando") : t("guardar")}
         </button>
       </form>
     </main>
