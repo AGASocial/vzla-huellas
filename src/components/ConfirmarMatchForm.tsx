@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export function ConfirmarMatchForm({
   huellaDesconocidaId,
@@ -14,6 +15,7 @@ export function ConfirmarMatchForm({
     telefono_contacto: string;
   }) => void;
 }) {
+  const t = useTranslations("confirmar_match");
   const [direccion, setDireccion] = useState("");
   const [estado, setEstado] = useState<"fallecido" | "con_vida" | "">("");
   const [enviando, setEnviando] = useState(false);
@@ -37,7 +39,7 @@ export function ConfirmarMatchForm({
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error ?? "No se pudo confirmar el match.");
+        setError(data.error ?? t("error_generico"));
         setEnviando(false);
         return;
       }
@@ -48,7 +50,7 @@ export function ConfirmarMatchForm({
         telefono_contacto: familiar.telefono_familiar || familiar.telefono,
       });
     } catch {
-      setError("No se pudo conectar con el servidor.");
+      setError(t("error_servidor"));
       setEnviando(false);
     }
   }
@@ -59,7 +61,7 @@ export function ConfirmarMatchForm({
       className="flex flex-col gap-3 mt-3 border-t border-[var(--gris-claro)] pt-3"
     >
       <label className="flex flex-col gap-1 text-sm text-[var(--gris)]">
-        Dirección actual de la persona desaparecida
+        {t("label_direccion")}
         <input
           value={direccion}
           onChange={(event) => setDireccion(event.target.value)}
@@ -69,7 +71,7 @@ export function ConfirmarMatchForm({
       </label>
 
       <fieldset className="flex flex-col gap-2 text-sm text-[var(--gris)]">
-        Estado de la persona desaparecida (con vida o fallecido)
+        {t("estado_label")}
         <div className="grid grid-cols-2 gap-3">
           <button
             type="button"
@@ -80,7 +82,7 @@ export function ConfirmarMatchForm({
                 : "bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 text-[var(--oscuro)]"
             }`}
           >
-            <span className="text-lg font-semibold block">Con vida</span>
+            <span className="text-lg font-semibold block">{t("estado_con_vida")}</span>
           </button>
           <button
             type="button"
@@ -91,7 +93,7 @@ export function ConfirmarMatchForm({
                 : "bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 text-[var(--oscuro)]"
             }`}
           >
-            <span className="text-lg font-semibold block">Fallecido</span>
+            <span className="text-lg font-semibold block">{t("estado_fallecido")}</span>
           </button>
         </div>
       </fieldset>
@@ -103,7 +105,7 @@ export function ConfirmarMatchForm({
         disabled={enviando}
         className="rounded-lg bg-[var(--verde-ok)] hover:bg-[var(--verde-ok)]/90 text-white disabled:opacity-50 py-2 font-display shadow-[0_4px_15px_rgba(26,138,90,0.3)]"
       >
-        {enviando ? "Confirmando..." : "Confirmar coincidencia"}
+        {enviando ? t("confirmando") : t("confirmar")}
       </button>
     </form>
   );
