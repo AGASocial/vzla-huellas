@@ -51,7 +51,8 @@
     "error_sin_huella": "Sube o toma una foto de la huella antes de guardar.",
     "error_servidor": "No se pudo conectar con el servidor.",
     "error_generico": "Ocurrió un error al guardar.",
-    "huella_preview_alt": "Huella seleccionada"
+    "huella_preview_alt": "Huella seleccionada",
+    "ejemplo_alt": "Ejemplo de cómo debe verse la foto de la huella"
   },
   "base_datos": {
     "title": "Base de datos",

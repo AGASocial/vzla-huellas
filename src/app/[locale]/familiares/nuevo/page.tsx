@@ -113,7 +113,7 @@ export default function NuevoFamiliarPage() {
         <div className="flex flex-col sm:flex-row gap-3 items-start bg-[#FFF9F0] border border-[var(--amarillo)]/40 rounded-lg p-3 mb-6">
           <Image
             src="/huella_ejemplo.jpeg"
-            alt="Ejemplo de cómo debe verse la foto de la huella"
+            alt={t("ejemplo_alt")}
             width={120}
             height={150}
             className="rounded-lg w-24 h-auto sm:w-28 shrink-0"
