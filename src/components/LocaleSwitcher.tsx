@@ -24,6 +24,7 @@ export function LocaleSwitcher() {
       <button
         onClick={() => switchLocale("es")}
         disabled={isPending}
+        aria-pressed={locale === "es"}
         className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${
           locale === "es"
             ? "font-semibold text-[var(--oscuro)]"
@@ -36,6 +37,7 @@ export function LocaleSwitcher() {
       <button
         onClick={() => switchLocale("en")}
         disabled={isPending}
+        aria-pressed={locale === "en"}
         className={`flex items-center gap-1 px-2 py-1 rounded transition-colors ${
           locale === "en"
             ? "font-semibold text-[var(--oscuro)]"
