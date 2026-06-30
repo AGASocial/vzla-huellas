@@ -82,7 +82,7 @@
     "coincidencia_title": "¡Coincidencia confirmada!",
     "coincidencia_subtitle": "Contacta a la familia para darle seguimiento:",
     "error_cargar": "No se pudo cargar la información.",
-    "score_label": "Score: {score}%"
+    "score_label": "Puntaje: {score}%"
   },
   "candidatos_huella": {
     "title": "Posibles coincidencias",
@@ -97,7 +97,7 @@
     "spinner": "Buscando coincidencias... esto puede tardar un poco si hay muchos registros.",
     "sin_familiares": "No hay familiares registrados todavía para comparar. Esta huella queda guardada y se comparará automáticamente cuando alguien registre un familiar.",
     "error_cargar": "No se pudo cargar la información.",
-    "score_label": "Score: {score}%"
+    "score_label": "Puntaje: {score}%"
   },
   "escanear": {
     "title": "Escanear huellas digitales",
@@ -144,7 +144,7 @@
     "estado_fallecido": "Fallecido",
     "confirmar": "Confirmar coincidencia",
     "confirmando": "Confirmando...",
-    "error_generico": "No se pudo confirmar el match.",
+    "error_generico": "No se pudo confirmar la coincidencia.",
     "error_servidor": "No se pudo conectar con el servidor."
   },
   "galeria": {
