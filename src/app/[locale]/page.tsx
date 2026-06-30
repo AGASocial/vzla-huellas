@@ -32,7 +32,11 @@ export default function Home() {
       <div className="rounded-2xl bg-[var(--oscuro)] text-white p-6 sm:p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-28 h-28 rounded-full bg-[var(--amarillo)] opacity-15 -translate-y-8 translate-x-8" />
         <h2 className="text-2xl sm:text-3xl font-display leading-tight relative">
-          {t("hero")}
+          {t.rich("hero", {
+            accent: (chunks) => (
+              <span className="text-[var(--amarillo)]">{chunks}</span>
+            ),
+          })}
         </h2>
         <p className="text-white/70 text-2xl mt-3 relative">{t("hero_body")}</p>
       </div>
