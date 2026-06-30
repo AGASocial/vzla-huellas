@@ -19,6 +19,9 @@ export default function EscanearPage() {
   const [estado, setEstado] = useState<EstadoPersona>("");
   const [huella, setHuella] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const etiquetaInputRef = useRef<HTMLInputElement>(null);
+  const [etiqueta, setEtiqueta] = useState<File | null>(null);
+  const [etiquetaPreviewUrl, setEtiquetaPreviewUrl] = useState<string | null>(null);
   const coordsRef = useRef<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
@@ -30,6 +33,16 @@ export default function EscanearPage() {
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [huella]);
+
+  useEffect(() => {
+    if (!etiqueta) {
+      setEtiquetaPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(etiqueta);
+    setEtiquetaPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [etiqueta]);
 
   function capturarUbicacion(timeout = 10000): Promise<{ lat: number; lng: number } | null> {
     if (!("geolocation" in navigator)) return Promise.resolve(null);
@@ -97,6 +110,7 @@ export default function EscanearPage() {
 
     const formData = new FormData();
     formData.append("huella", huella);
+    if (etiqueta) formData.append("etiqueta", etiqueta);
     formData.append("observaciones", observaciones);
     formData.append("direccion", direccion);
     formData.append("estado", estado);
@@ -202,6 +216,49 @@ export default function EscanearPage() {
         className="hidden"
         onChange={handleHuellaChange}
       />
+
+      {/* Foto de etiqueta */}
+      <div className="mb-6">
+        <p className="text-sm text-[var(--gris)] mb-2">Foto de etiqueta en muñeca o tobillo (opcional)</p>
+        {etiquetaPreviewUrl ? (
+          <div className="flex items-center gap-4">
+            <Image
+              src={etiquetaPreviewUrl}
+              alt="Etiqueta seleccionada"
+              width={80}
+              height={80}
+              unoptimized
+              className="rounded-lg w-20 h-20 object-cover border border-[var(--azul)]"
+            />
+            <div className="flex flex-col gap-2">
+              <p className="text-[var(--azul)] text-sm">Foto de etiqueta lista.</p>
+              <button
+                type="button"
+                onClick={() => etiquetaInputRef.current?.click()}
+                className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-sm hover:border-[var(--oscuro)]/40"
+              >
+                Cambiar foto
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => etiquetaInputRef.current?.click()}
+            className="w-full rounded-xl bg-white border border-dashed border-[var(--gris-claro)] hover:border-[var(--azul)] transition-colors p-4 text-left"
+          >
+            <span className="text-sm font-semibold text-[var(--oscuro)] block">Subir foto de etiqueta</span>
+            <span className="text-xs text-[var(--gris)]">Opcional — foto de la etiqueta en muñeca o tobillo</span>
+          </button>
+        )}
+        <input
+          ref={etiquetaInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) setEtiqueta(f); }}
+        />
+      </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <label className="sm:col-span-2 flex flex-col gap-1 text-sm text-[var(--gris)]">
