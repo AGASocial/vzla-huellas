@@ -102,7 +102,9 @@
     "spinner": "Buscando coincidencias... esto puede tardar un poco si hay muchos registros.",
     "sin_familiares": "No hay familiares registrados todavía para comparar. Esta huella queda guardada y se comparará automáticamente cuando alguien registre un familiar.",
     "error_cargar": "No se pudo cargar la información.",
-    "score_label": "Puntaje: {score}%"
+    "score_label": "Puntaje: {score}%",
+    "etiqueta_alt": "Etiqueta de identificación",
+    "huella_familiar_alt": "Huella de {nombre}"
   },
   "escanear": {
     "title": "Escanear huellas digitales",

@@ -102,7 +102,9 @@
     "spinner": "Searching for matches... this may take a moment if there are many records.",
     "sin_familiares": "No family members registered yet for comparison. This fingerprint is saved and will automatically be compared when someone registers a family member.",
     "error_cargar": "Could not load the information.",
-    "score_label": "Score: {score}%"
+    "score_label": "Score: {score}%",
+    "etiqueta_alt": "Identification tag",
+    "huella_familiar_alt": "Fingerprint of {nombre}"
   },
   "escanear": {
     "title": "Scan fingerprints",

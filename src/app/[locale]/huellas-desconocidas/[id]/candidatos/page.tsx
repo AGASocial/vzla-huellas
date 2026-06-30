@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { BackButton } from "@/components/BackButton";
 
 type Familiar = {
@@ -14,6 +15,7 @@ type Familiar = {
 type Candidato = { familiar: Familiar; score: number };
 
 export default function CandidatosHuellaDesconocidaPage() {
+  const t = useTranslations("candidatos_huella");
   const params = useParams<{ id: string }>();
   const [huellaUrl, setHuellaUrl] = useState<string | null>(null);
   const [observaciones, setObservaciones] = useState<string | null>(null);
@@ -38,39 +40,34 @@ export default function CandidatosHuellaDesconocidaPage() {
         setEstadoPersona(data.huellaDesconocida.estado);
         setCandidatos(data.candidatos);
       })
-      .catch(() => setError("No se pudo cargar la información."));
-  }, [params.id]);
-
+      .catch(() => setError(t("error_cargar")));
+  }, [params.id, t]);
 
   return (
     <main className="min-h-screen bg-[var(--fondo)] text-[var(--oscuro)] w-full mx-auto px-4 sm:px-8 py-6 sm:py-10 flex flex-col gap-6">
       <div>
         <div className="flex items-center gap-3 mb-1">
           <BackButton href="/" />
-          <h1 className="text-2xl font-display">Posibles coincidencias</h1>
+          <h1 className="text-2xl font-display">{t("title")}</h1>
         </div>
-        <p className="text-[var(--gris)] text-sm">
-          Compara visualmente la huella escaneada con los familiares
-          registrados. El porcentaje es solo un filtro orientativo. Para
-          confirmar una coincidencia, búscala en &quot;Ver base de datos&quot;.
-        </p>
+        <p className="text-[var(--gris)] text-sm">{t("subtitle")}</p>
       </div>
 
       {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
 
       {huellaUrl && (
         <div>
-          <p className="text-sm text-[var(--gris)] mb-1">Huella escaneada</p>
-          <Image src={huellaUrl} alt="Huella escaneada" width={128} height={128} className="rounded-lg w-32 h-auto" />
+          <p className="text-sm text-[var(--gris)] mb-1">{t("huella_escaneada")}</p>
+          <Image src={huellaUrl} alt={t("huella_escaneada")} width={128} height={128} className="rounded-lg w-32 h-auto" />
         </div>
       )}
 
       {etiquetaUrl && (
         <div>
-          <p className="text-sm text-[var(--gris)] mb-1">Etiqueta (muñeca / tobillo)</p>
+          <p className="text-sm text-[var(--gris)] mb-1">{t("etiqueta_label")}</p>
           <Image
             src={etiquetaUrl}
-            alt="Etiqueta de identificación"
+            alt={t("etiqueta_alt")}
             width={128}
             height={128}
             className="rounded-lg w-32 h-auto"
@@ -82,21 +79,21 @@ export default function CandidatosHuellaDesconocidaPage() {
         <div className="rounded-lg bg-white border border-[var(--gris-claro)] p-3 flex flex-col gap-2 text-sm">
           {direccion && (
             <p>
-              <span className="text-[var(--gris)]">Dirección: </span>
+              <span className="text-[var(--gris)]">{t("direccion_label")} </span>
               <span className="text-[var(--oscuro)]">{direccion}</span>
             </p>
           )}
           {estadoPersona && (
             <p>
-              <span className="text-[var(--gris)]">Estado: </span>
+              <span className="text-[var(--gris)]">{t("estado_label")} </span>
               <span className="text-[var(--oscuro)]">
-                {estadoPersona === "fallecido" ? "Fallecido" : "Con vida"}
+                {estadoPersona === "fallecido" ? t("estado_fallecido") : t("estado_con_vida")}
               </span>
             </p>
           )}
           {observaciones && (
             <div>
-              <p className="text-[var(--gris)] mb-1">Observaciones</p>
+              <p className="text-[var(--gris)] mb-1">{t("observaciones_label")}</p>
               <p className="text-[var(--oscuro)] whitespace-pre-wrap">{observaciones}</p>
             </div>
           )}
@@ -106,16 +103,12 @@ export default function CandidatosHuellaDesconocidaPage() {
       {candidatos === null && !error && (
         <div className="flex items-center gap-3 text-[var(--gris)]">
           <span className="inline-block w-4 h-4 rounded-full border-2 border-[var(--gris-claro)] border-t-[var(--azul)] animate-spin" />
-          <p>Buscando coincidencias... esto puede tardar un poco si hay muchos registros.</p>
+          <p>{t("spinner")}</p>
         </div>
       )}
 
       {candidatos !== null && (candidatos ?? []).length === 0 && (
-        <p className="text-[var(--gris)]">
-          No hay familiares registrados todavía para comparar. Esta huella queda
-          guardada y se comparará automáticamente cuando alguien registre un
-          familiar.
-        </p>
+        <p className="text-[var(--gris)]">{t("sin_familiares")}</p>
       )}
 
       <ul className="flex flex-col gap-4">
@@ -126,14 +119,14 @@ export default function CandidatosHuellaDesconocidaPage() {
           >
             <Image
               src={familiar.huella_url}
-              alt={`Huella de ${familiar.nombre_completo}`}
+              alt={t("huella_familiar_alt", { nombre: familiar.nombre_completo })}
               width={64}
               height={64}
               className="rounded-lg w-16 h-16 object-cover"
             />
             <div>
               <p className="font-semibold">{familiar.nombre_completo}</p>
-              <p className="text-sm text-[var(--gris)]">Score: {score}%</p>
+              <p className="text-sm text-[var(--gris)]">{t("score_label", { score })}</p>
             </div>
           </li>
         ))}
