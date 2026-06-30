@@ -169,7 +169,8 @@
     "pagina": "Page {page} of {total}",
     "anterior": "Previous",
     "siguiente": "Next",
-    "error_cargar": "Could not load the gallery."
+    "error_cargar": "Could not load the gallery.",
+    "huella_alt": "Unidentified fingerprint"
   },
   "locale_switcher": {
     "label": "Language"

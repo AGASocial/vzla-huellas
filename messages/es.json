@@ -169,7 +169,8 @@
     "pagina": "Página {page} de {total}",
     "anterior": "Anterior",
     "siguiente": "Siguiente",
-    "error_cargar": "No se pudo cargar la galería."
+    "error_cargar": "No se pudo cargar la galería.",
+    "huella_alt": "Huella sin identificar"
   },
   "locale_switcher": {
     "label": "Idioma"

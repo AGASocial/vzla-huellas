@@ -1,9 +1,10 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
+import { Link, useRouter } from "@/i18n/navigation";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { BackButton } from "@/components/BackButton";
 
 type HuellaDesconocida = {
@@ -21,6 +22,7 @@ export default function GaleriaHuellasPage() {
 }
 
 function GaleriaHuellas() {
+  const t = useTranslations("galeria");
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
@@ -41,8 +43,8 @@ function GaleriaHuellas() {
         setHuellas(data.huellas);
         setTotalPages(data.totalPages);
       })
-      .catch(() => setError("No se pudo cargar la galería."));
-  }, [page]);
+      .catch(() => setError(t("error_cargar")));
+  }, [page, t]);
 
   function goToPage(target: number) {
     router.push(`/candidatos?page=${target}`);
@@ -53,19 +55,15 @@ function GaleriaHuellas() {
       <div>
         <div className="flex items-center gap-3 mb-1">
           <BackButton />
-          <h1 className="text-2xl font-display">Huellas sin identificar</h1>
+          <h1 className="text-2xl font-display">{t("title")}</h1>
         </div>
-        <p className="text-[var(--gris)] text-sm">
-          Huellas escaneadas en el terreno que aún no tienen una coincidencia
-          confirmada. Si reconoces a alguien, regístralo como familiar para
-          comparar.
-        </p>
+        <p className="text-[var(--gris)] text-sm">{t("subtitle")}</p>
       </div>
 
       {error && <p className="text-[var(--rojo)] text-sm">{error}</p>}
-      {huellas === null && !error && <p className="text-[var(--gris)]">Cargando...</p>}
+      {huellas === null && !error && <p className="text-[var(--gris)]">{t("cargando")}</p>}
       {huellas?.length === 0 && (
-        <p className="text-[var(--gris)]">No hay huellas pendientes por ahora.</p>
+        <p className="text-[var(--gris)]">{t("sin_huellas")}</p>
       )}
 
       <ul className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -74,7 +72,7 @@ function GaleriaHuellas() {
             <Link href={`/huellas-desconocidas/${huella.id}/candidatos`}>
               <Image
                 src={huella.huella_url}
-                alt="Huella sin identificar"
+                alt={t("huella_alt")}
                 fill
                 sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 16vw"
                 className="rounded-lg object-cover border border-[var(--gris-claro)]"
@@ -91,17 +89,17 @@ function GaleriaHuellas() {
             onClick={() => goToPage(page - 1)}
             className="rounded-lg bg-white border border-[var(--gris-claro)] px-4 py-2 text-sm disabled:opacity-40 hover:border-[var(--oscuro)]/40"
           >
-            Anterior
+            {t("anterior")}
           </button>
           <span className="text-sm text-[var(--gris)]">
-            Página {page} de {totalPages}
+            {t("pagina", { page, total: totalPages })}
           </span>
           <button
             disabled={page >= totalPages}
             onClick={() => goToPage(page + 1)}
             className="rounded-lg bg-white border border-[var(--gris-claro)] px-4 py-2 text-sm disabled:opacity-40 hover:border-[var(--oscuro)]/40"
           >
-            Siguiente
+            {t("siguiente")}
           </button>
         </div>
       )}
