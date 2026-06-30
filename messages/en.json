@@ -61,7 +61,8 @@
     "estado_encontrado": "Found",
     "estado_buscando": "Searching",
     "error_servidor": "Could not connect to the server.",
-    "error_generico": "An error occurred while searching."
+    "error_generico": "An error occurred while searching.",
+    "huella_alt": "Fingerprint of {nombre}"
   },
   "candidatos_familiar": {
     "title_confirm": "Possible matches",
@@ -123,7 +124,9 @@
     "guardando": "Saving...",
     "error_sin_huella": "Please take or upload a photo of the fingerprint before saving.",
     "error_servidor": "Could not connect to the server.",
-    "error_generico": "An error occurred while processing the fingerprint."
+    "error_generico": "An error occurred while processing the fingerprint.",
+    "huella_preview_alt": "Selected fingerprint",
+    "etiqueta_preview_alt": "Selected tag photo"
   },
   "guia": {
     "title": "Collaborator guide",

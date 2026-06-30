@@ -126,7 +126,7 @@ export default function EscanearPage() {
 
       {previewUrl ? (
         <div className="flex items-center gap-4 mb-6">
-          <Image src={previewUrl} alt="Huella seleccionada" width={96} height={96} unoptimized className="rounded-lg w-24 h-24 object-cover border border-[var(--verde-ok)]" />
+          <Image src={previewUrl} alt={t("huella_preview_alt")} width={96} height={96} unoptimized className="rounded-lg w-24 h-24 object-cover border border-[var(--verde-ok)]" />
           <div className="flex flex-col gap-2">
             <p className="text-[var(--verde-ok)] text-sm">{t("huella_lista")}</p>
             <div className="flex gap-2">
@@ -150,7 +150,7 @@ export default function EscanearPage() {
         <p className="text-sm text-[var(--gris)] mb-2">{t("etiqueta_label")}</p>
         {etiquetaPreviewUrl ? (
           <div className="flex items-center gap-4">
-            <Image src={etiquetaPreviewUrl} alt="Etiqueta seleccionada" width={80} height={80} unoptimized className="rounded-lg w-20 h-20 object-cover border border-[var(--azul)]" />
+            <Image src={etiquetaPreviewUrl} alt={t("etiqueta_preview_alt")} width={80} height={80} unoptimized className="rounded-lg w-20 h-20 object-cover border border-[var(--azul)]" />
             <div className="flex flex-col gap-2">
               <p className="text-[var(--azul)] text-sm">{t("etiqueta_lista")}</p>
               <button type="button" onClick={() => etiquetaInputRef.current?.click()} className="rounded-lg border border-[var(--gris-claro)] bg-white px-3 py-1.5 text-sm hover:border-[var(--oscuro)]/40">{t("etiqueta_cambiar")}</button>

@@ -93,7 +93,7 @@ export default function BaseDatosPage() {
                 href={`/familiares/${resultado.id}/candidatos?origen=base-datos`}
                 className="rounded-xl bg-white border border-[var(--gris-claro)] hover:border-[var(--oscuro)]/40 transition-colors p-4 flex items-center gap-3"
               >
-                <Image src={resultado.huella_url} alt={`Huella de ${resultado.nombre_completo}`} width={56} height={56} className="rounded-lg w-14 h-14 object-cover shrink-0" />
+                <Image src={resultado.huella_url} alt={t("huella_alt", { nombre: resultado.nombre_completo })} width={56} height={56} className="rounded-lg w-14 h-14 object-cover shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold truncate">{resultado.nombre_completo}</p>
                   {resultado.numero_documento && (

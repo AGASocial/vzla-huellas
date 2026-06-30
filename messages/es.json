@@ -61,7 +61,8 @@
     "estado_encontrado": "Encontrado",
     "estado_buscando": "Buscando",
     "error_servidor": "No se pudo conectar con el servidor.",
-    "error_generico": "Ocurrió un error al buscar."
+    "error_generico": "Ocurrió un error al buscar.",
+    "huella_alt": "Huella de {nombre}"
   },
   "candidatos_familiar": {
     "title_confirm": "Posibles coincidencias",
@@ -123,7 +124,9 @@
     "guardando": "Guardando...",
     "error_sin_huella": "Toma o sube una foto de la huella antes de guardar.",
     "error_servidor": "No se pudo conectar con el servidor.",
-    "error_generico": "Ocurrió un error al procesar la huella."
+    "error_generico": "Ocurrió un error al procesar la huella.",
+    "huella_preview_alt": "Huella seleccionada",
+    "etiqueta_preview_alt": "Etiqueta seleccionada"
   },
   "guia": {
     "title": "Guía para colaboradores",
