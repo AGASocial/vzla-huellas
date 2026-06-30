@@ -19,6 +19,7 @@ export default function CandidatosHuellaDesconocidaPage() {
   const [observaciones, setObservaciones] = useState<string | null>(null);
   const [direccion, setDireccion] = useState<string | null>(null);
   const [estadoPersona, setEstadoPersona] = useState<string | null>(null);
+  const [etiquetaUrl, setEtiquetaUrl] = useState<string | null>(null);
   const [candidatos, setCandidatos] = useState<Candidato[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +32,7 @@ export default function CandidatosHuellaDesconocidaPage() {
           return;
         }
         setHuellaUrl(data.huellaDesconocida.huella_url);
+        setEtiquetaUrl(data.huellaDesconocida.etiqueta_url ?? null);
         setObservaciones(data.huellaDesconocida.observaciones);
         setDireccion(data.huellaDesconocida.direccion);
         setEstadoPersona(data.huellaDesconocida.estado);
@@ -60,6 +62,19 @@ export default function CandidatosHuellaDesconocidaPage() {
         <div>
           <p className="text-sm text-[var(--gris)] mb-1">Huella escaneada</p>
           <Image src={huellaUrl} alt="Huella escaneada" width={128} height={128} className="rounded-lg w-32 h-auto" />
+        </div>
+      )}
+
+      {etiquetaUrl && (
+        <div>
+          <p className="text-sm text-[var(--gris)] mb-1">Etiqueta (muñeca / tobillo)</p>
+          <Image
+            src={etiquetaUrl}
+            alt="Etiqueta de identificación"
+            width={128}
+            height={128}
+            className="rounded-lg w-32 h-auto"
+          />
         </div>
       )}
 
